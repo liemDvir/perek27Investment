@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".register"
+    android:background="@color/white"
+    >
+
+    <TextView
+        android:layout_width = "match_parent"
+        android:layout_height="wrap_content"
+        android:text="investment"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textColor= "#871919"
+
+
+        />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="please enter your email"
+        android:textColorHint="@color/black"
+        android:gravity="center"
+        android:layout_marginTop="150dp"
+        android:textSize="25dp"
+        android:layout_margin="50dp"
+        android:id="@+id/emailRegister"
+        />
+
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="password"
+        android:textColorHint="@color/black"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:layout_marginLeft="50dp"
+        android:id="@+id/passwordRegister"
+        />
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="first name"
+        android:textColorHint="@color/black"
+        android:gravity="center"
+        android:layout_marginTop="150dp"
+        android:textSize="25dp"
+        android:layout_margin="50dp"
+        android:id="@+id/firstname"
+        />
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="last name"
+        android:textColorHint="@color/black"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:layout_marginLeft="50dp"
+        android:id="@+id/lastName"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="date of birth"
+        android:id="@+id/dateOfBirth"
+        android:textSize="30dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="#B12020"
+        />
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="register"
+        android:id="@+id/registerBtn"
+        android:textSize="30dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="#B12020"
+        />
+
+
+
+
+
+
+</LinearLayout>
