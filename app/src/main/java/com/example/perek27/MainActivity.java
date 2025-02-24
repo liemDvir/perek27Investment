@@ -2,6 +2,7 @@ package com.example.perek27;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,10 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(view == loginButton) {
             if (loginButton.getText().equals("login"))
             {
+                Log.d("Strting the function", (String) loginButton.getText());
 
                 String email = "";
                 String password = "";
-                if (loginEmail != null && !loginEmail.equals("") && loginPassword != null && !loginPassword.equals("")) {
+                if ((loginEmail != null) && (!loginEmail.equals("")) && (loginPassword != null) && (!loginPassword.equals(""))) {
                     email = loginEmail.getText().toString();
                     password = loginPassword.getText().toString();
 
@@ -72,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();
-                                loginButton.setText("Logout");
+                                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+                                startActivity(intent);
                             } else {
                                 Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_LONG).show();
 
@@ -82,9 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     Toast.makeText(MainActivity.this, "Not entered email or pass", Toast.LENGTH_LONG).show();
                 }
-            } else if (loginButton.getText().equals("logout"))
-            {
-                firebaseAuth.signOut();
             }
         } else if (view == goRegister)
         {
