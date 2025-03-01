@@ -14,12 +14,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class StockControllerService extends Service {
 
     private final String STOCK_CONTROLLER_SERVICE_NAME = "StockControllerService";
     private final String FIREBASE_URL = "https://insvestment-85820-default-rtdb.firebaseio.com/";
+
+    private final String STOCK_REFERENCE_NAME = "push";
     private static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseAuth mFirebaseAuth;
     private final IBinder binder = new InteractionService();
@@ -62,5 +65,10 @@ public class StockControllerService extends Service {
             }
         });
 
+    }
+
+    public void SetTransaction(TransactionHistory tranHistory){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(STOCK_REFERENCE_NAME).push();
+        ref.setValue(tranHistory);
     }
 }
