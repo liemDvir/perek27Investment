@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class StockModel extends Application {
 
     private StockControllerService mStockControllerService;
@@ -39,6 +42,13 @@ public class StockModel extends Application {
             return;
 
         mStockControllerService.SignInWithEmailAndPassword(email, password);
+    }
+
+    public void SetTransaction(TransactionHistory tranHistory){
+        if(mStockControllerService == null)
+            return;
+
+        mStockControllerService.SetTransaction(tranHistory);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
