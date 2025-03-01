@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     email = loginEmail.getText().toString();
                     password = loginPassword.getText().toString();
 
+                    //TODO - disable button
                     //mStockModel.SignInWithEmailAndPassword(email,password);
                     firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
                                 startActivity(intent);
                             } else {
+                                //TODO - enable to button
                                 Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_LONG).show();
 
                             }
