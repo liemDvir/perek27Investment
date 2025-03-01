@@ -13,6 +13,9 @@ import android.os.IBinder;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StockModel extends Application {
 
     private StockControllerService mStockControllerService;
@@ -35,6 +38,14 @@ public class StockModel extends Application {
         Intent serviceIntent = new Intent(this.getApplicationContext(),StockControllerService.class);
         this.getApplicationContext().bindService(serviceIntent,serviceConnection,BIND_AUTO_CREATE);
 
+    }
+
+    public void register(final Observer observer) {
+        mStockControllerService.register(observer);
+    }
+
+    public void unregister(final Observer observer) {
+        mStockControllerService.unregister(observer);
     }
 
     public void SignInWithEmailAndPassword(String email, String password){

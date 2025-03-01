@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +28,7 @@ public class StockControllerService extends Service {
     private static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseAuth mFirebaseAuth;
 
-    private List mObservers = new ArrayList<>();
+    private final List<Observer> mObservers = new ArrayList<Observer>();
     private final IBinder binder = new InteractionService();
     public StockControllerService() {
     }
@@ -75,9 +74,12 @@ public class StockControllerService extends Service {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.d(STOCK_CONTROLLER_SERVICE_NAME, "SignInWithEmailAndPassword - successfully end");
-
-
                 }
+                //Notify observers
+                for (final Observer observer : mObservers) {
+                    observer.SignInWithEmailAndPasswordCompleate(task);
+                }
+
             }
         });
 
