@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     FirebaseAuth firebaseAuth;
+    StockModel mStockModel;
     Button loginButton,goRegister;
     EditText loginEmail, loginPassword;
     @Override
@@ -39,7 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        firebaseAuth = FirebaseAuth.getInstance();
+
+        mStockModel = StockModel.GetInstance();
+        mStockModel.Init();
+
+        //firebaseAuth = FirebaseAuth.getInstance();
 
         loginButton = (Button)findViewById(R.id.loginBtn);
         loginButton.setOnClickListener(this);
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     email = loginEmail.getText().toString();
                     password = loginPassword.getText().toString();
 
+                    //mStockModel.SignInWithEmailAndPassword(email,password);
                     firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
