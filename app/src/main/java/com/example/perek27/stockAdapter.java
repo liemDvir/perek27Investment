@@ -11,53 +11,56 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class stockAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder>
+public class stockAdapter extends RecyclerView.Adapter<stockAdapter.stockViewHolder>
 {
 
     private Context context;
-    private ArrayList<stock> arrayList;
+    private ArrayList<Stock> arrayList;
 
-    public stockAdapter(Context newContext, ArrayList<stock> newArrayList)
+    private OnItemClickListener listener;
+
+    public stockAdapter(Context newContext, ArrayList<Stock> newArrayList, OnItemClickListener newListener)
     {
         this.context = newContext;
         this.arrayList = newArrayList;
-    }
-    public  stockAdapter()
-    {
-
+        this.listener = newListener;
     }
 
     @NonNull
     @Override
-    public postAdapter.postViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public stockAdapter.stockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.rowinstockhistory,null);
-        return new postAdapter.postViewHolder(view);
+        View view = inflater.inflate(R.layout.rowindiscover,null);
+        return new stockAdapter.stockViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull postAdapter.postViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull stockAdapter.stockViewHolder holder, int position)
     {
-        stock stock = arrayList.get(position);
+        Stock stock = arrayList.get(position);
 
-        holder.typeOfStock.setText(stock.getTypeOfStock());
-        holder.amountOfStock.setText(stock.getMoneyInvested()+ "");
+        holder.amountOfMoney.setText(stock.getValue() + "");
+        holder.stockInvested.setText(stock.getTypeOfStock());
 
+        holder.itemView.setOnClickListener(view -> listener.onItemClick(stock));
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return arrayList.size();
     }
 
     public class stockViewHolder extends RecyclerView.ViewHolder
     {
             TextView stockInvested, amountOfMoney;
+
         public stockViewHolder(@NonNull View itemView) {
             super(itemView);
-            stockInvested = itemView.findViewById(R.id.amountOfMoney);
-            amountOfMoney = itemView.findViewById(R.id.nameOfStock);
+            amountOfMoney = itemView.findViewById(R.id.amountOfMoney);
+            stockInvested = itemView.findViewById(R.id.nameOfStock);
+
+
 
 
         }

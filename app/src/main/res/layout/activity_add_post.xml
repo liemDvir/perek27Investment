@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddPostActivity"
+    tools:context=".StockActionActivity"
     android:background="@color/black">
 
     <TextView
@@ -17,14 +17,15 @@
         android:textColor="#871919"
         android:textSize="30dp" />
 
-    <EditText
+    <TextView
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_margin="30dp"
-        android:hint="enter the stock"
+        android:textSize="40sp"
+        android:text=""
         android:id="@+id/typeOfStock"
-        android:textColorHint="@color/white"
+        android:textColor="@color/white"
 
         />
     <EditText

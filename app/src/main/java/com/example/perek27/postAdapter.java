@@ -14,9 +14,9 @@ import java.util.ArrayList;
 
 public class postAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder> {
     private Context context;
-    private ArrayList<Post> arrayList;
+    private ArrayList<TransactionHistory> arrayList;
 
-    public postAdapter(Context newContext, ArrayList<Post> newArrayList)
+    public postAdapter(Context newContext, ArrayList<TransactionHistory> newArrayList)
     {
         this.context = newContext;
         this.arrayList = newArrayList;
@@ -33,22 +33,21 @@ public class postAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder
     @Override
     public void onBindViewHolder(@NonNull postViewHolder holder, int position)
     {
-        Post post = arrayList.get(position);
+        TransactionHistory transactionHistory = arrayList.get(position);
 
-        if (post.getIsBuy()) // if true means he sell the stock, else he bought
+        if (transactionHistory.getIsBuy()) // if true means he sell the stock, else he bought
         {
-            holder.amountOfStock.setText("+" + post.getMoneyInvested());
+            holder.amountOfStock.setText("+" + transactionHistory.getMoneyInvested());
             holder.amountOfStock.setTextColor(Color.parseColor("#4CAF50"));
             holder.typeOfStock.setTextColor(Color.parseColor("#4CAF50"));
-        } else if (!post.getIsBuy())
+        } else if (!transactionHistory.getIsBuy())
         {
-            int i = post.getMoneyInvested();
-            holder.amountOfStock.setText("-" + post.getMoneyInvested());
+            holder.amountOfStock.setText("-" + transactionHistory.getMoneyInvested());
             holder.amountOfStock.setTextColor(Color.parseColor("#871919"));
             holder.typeOfStock.setTextColor(Color.parseColor("#871919"));
 
          }
-        holder.typeOfStock.setText(post.getTypeOfStock());
+        holder.typeOfStock.setText(transactionHistory.getTypeOfStock());
 
 
     }

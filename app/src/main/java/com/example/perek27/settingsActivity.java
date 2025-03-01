@@ -20,8 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Date;
-
 public class settingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseAuth firebaseAuth;
@@ -116,7 +114,7 @@ public class settingsActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
         } else if (view == discoverBtn)
         {
-            Intent intent = new Intent(settingsActivity.this,discoverActivity.class);
+            Intent intent = new Intent(settingsActivity.this, DiscoverActivity.class);
             startActivity(intent);
         } else if (view == historyBtn)
         {

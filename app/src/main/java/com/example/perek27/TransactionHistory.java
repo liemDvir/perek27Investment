@@ -1,16 +1,17 @@
 package com.example.perek27;
 
-public class Post {
+public class TransactionHistory {
     private int moneyInvested;
     private String typeOfStock;
+    private float amountOfStock;
 
     private boolean isBuy; // sell is negative(false), and buy is positive(true)
 
-    public Post()
+    public TransactionHistory()
     {
 
     }
-    Post(int newMoneyInvested, String newTypeOfStock, boolean newIsBuy)
+    TransactionHistory(int newMoneyInvested, String newTypeOfStock, boolean newIsBuy)
     {
         this.moneyInvested = newMoneyInvested;
         this.typeOfStock = newTypeOfStock;

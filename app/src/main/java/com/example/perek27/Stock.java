@@ -2,25 +2,29 @@ package com.example.perek27;
 
 import java.util.Date;
 
-public class stock
+public class Stock
 {
     private float moneyInvested;
+
+    private float amountOfStock;
+
+    private float currentValue;
     private String typeOfStock;
 
-    private Date date;
+    private Date lastUpdate;
 
-    stock(String newTypeOfStock,float newMoneyInvested , Date newDate)
+    Stock(String newTypeOfStock, float newMoneyInvested , Date newDate)
     {
         this.moneyInvested = newMoneyInvested;
         this.typeOfStock = newTypeOfStock;
-        this.date = newDate;
+        this.lastUpdate = newDate;
     }
 
-    public stock(){
+    public Stock(){
 
     }
 
-    public float getMoneyInvested() {
+    public float getValue() {
         return moneyInvested;
     }
     public void setMoneyInvested(int moneyInvested) {
@@ -31,7 +35,8 @@ public class stock
         return typeOfStock;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
+
 }

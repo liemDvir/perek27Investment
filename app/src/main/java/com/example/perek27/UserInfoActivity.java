@@ -1,6 +1,5 @@
 package com.example.perek27;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -86,7 +85,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
         } else if(view == discoverBtn)
         {
-            Intent intent = new Intent(UserInfoActivity.this,discoverActivity.class);
+            Intent intent = new Intent(UserInfoActivity.this, DiscoverActivity.class);
             this.startActivity(intent);
         } else if (view == settingBtn)
         {

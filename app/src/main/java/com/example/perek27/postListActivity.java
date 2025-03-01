@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class postListActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView recyclerView;
     FirebaseDatabase firebaseDatabase;
-    ArrayList<Post> postArr;
+    ArrayList<TransactionHistory> transactionHistoryArr;
 
     Button summaryBtn, discoverBtn, settingBtn;
 
@@ -58,13 +58,13 @@ public class postListActivity extends AppCompatActivity implements View.OnClickL
         firebaseDatabase.getReference("push").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                postArr = new ArrayList<>();
+                transactionHistoryArr = new ArrayList<>();
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
-                    Post p = dataSnapshot.getValue(Post.class);
-                    postArr.add(p);
+                    TransactionHistory p = dataSnapshot.getValue(TransactionHistory.class);
+                    transactionHistoryArr.add(p);
                 }
-                postAdapter adapter = new postAdapter(postListActivity.this,postArr);
+                postAdapter adapter = new postAdapter(postListActivity.this, transactionHistoryArr);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -87,7 +87,7 @@ public class postListActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
         } else if (view == discoverBtn)
         {
-            Intent intent = new Intent(postListActivity.this, discoverActivity.class);
+            Intent intent = new Intent(postListActivity.this, DiscoverActivity.class);
             startActivity(intent);
         } else if (view == settingBtn)
         {

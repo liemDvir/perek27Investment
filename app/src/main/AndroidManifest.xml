@@ -16,7 +16,7 @@
             android:name=".settingsActivity"
             android:exported="false" />
         <activity
-            android:name=".discoverActivity"
+            android:name=".DiscoverActivity"
             android:exported="false" />
         <activity
             android:name=".postListActivity"
@@ -25,7 +25,7 @@
             android:name=".UserInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPostActivity"
+            android:name=".StockActionActivity"
             android:exported="false" />
         <activity
             android:name=".register"

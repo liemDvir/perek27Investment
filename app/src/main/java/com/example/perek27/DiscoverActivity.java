@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,23 +13,22 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Queue;
-import java.util.Stack;
 
-public class discoverActivity extends AppCompatActivity implements View.OnClickListener {
+public class DiscoverActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseDatabase firebaseDatabase;
 
     RecyclerView recyclerView;
+    private Stock currentStock;
     Button summaryBtn, historyBtn,settingBtn;
+    public DiscoverActivity(){
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +39,17 @@ public class discoverActivity extends AppCompatActivity implements View.OnClickL
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ArrayList<stock> stocksStack =  new ArrayList<>();
+        ArrayList<Stock> stocksStack =  new ArrayList<>();
         Date currentDay = new Date(System.currentTimeMillis());
-        stock s1 = new stock("AAPL", 500,currentDay);
-        stock s2 = new stock("NETFLIX", 200,currentDay);
-        stock s3 = new stock("META", 130,currentDay);
+        Stock s1 = new Stock("AAPL", 500,currentDay);
+        Stock s2 = new Stock("NETFLIX", 200,currentDay);
+        Stock s3 = new Stock("META", 130,currentDay);
 
         stocksStack.add(s1);
         stocksStack.add(s2);
         stocksStack.add(s3);
+
+
 
 
         summaryBtn = (Button)findViewById(R.id.summaryButton);
@@ -65,26 +65,41 @@ public class discoverActivity extends AppCompatActivity implements View.OnClickL
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        stockAdapter stockAdapter = new stockAdapter(discoverActivity.this,stocksStack);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("stock").push();
+        ref.setValue(stocksStack);
+
+        stockAdapter stockAdapter = new stockAdapter(DiscoverActivity.this,stocksStack, item -> {
+            currentStock = item;
+            Intent tmpIntent = new Intent(DiscoverActivity.this, StockActionActivity.class);
+            tmpIntent.putExtra("StockName", item.getTypeOfStock());
+            startActivity(tmpIntent);
+
+        });
         recyclerView.setAdapter(stockAdapter);
 
     }
+    public Stock getCurrentStock()
+    {
+        return currentStock;
+    }
+
 
     @Override
     public void onClick(View view) {
         if (view == summaryBtn)
         {
-            Intent intent = new Intent(discoverActivity.this,UserInfoActivity.class);
+            Intent intent = new Intent(DiscoverActivity.this,UserInfoActivity.class);
             startActivity(intent);
         } else if (view == historyBtn)
         {
-            Intent intent = new Intent(discoverActivity.this,postListActivity.class);
+            Intent intent = new Intent(DiscoverActivity.this,postListActivity.class);
             startActivity(intent);
         } else if (view == settingBtn)
         {
-            Intent intent = new Intent(discoverActivity.this,settingsActivity.class);
+            Intent intent = new Intent(DiscoverActivity.this,settingsActivity.class);
             startActivity(intent);
         }
 
     }
+
 }
