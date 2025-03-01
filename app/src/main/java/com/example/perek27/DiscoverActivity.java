@@ -49,9 +49,6 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
         stocksStack.add(s2);
         stocksStack.add(s3);
 
-
-
-
         summaryBtn = (Button)findViewById(R.id.summaryButton);
         summaryBtn.setOnClickListener(this);
 
