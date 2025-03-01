@@ -65,8 +65,7 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
                  String strType = typeOfStock.getText().toString();
                  int intAmount = Integer.parseInt(amountOfStock.getText().toString());
                  TransactionHistory transactionHistory1 = new TransactionHistory(intAmount, strType,true);// means true because buy is positive
-                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("push").push();
-                 ref.setValue(transactionHistory1);
+                 StockModel.GetInstance().SetTransaction(transactionHistory1);
                  Toast.makeText(StockActionActivity.this, "Successfully bought", Toast.LENGTH_LONG).show();
                  Intent intent = new Intent(StockActionActivity.this,UserInfoActivity.class);
                  finish();
