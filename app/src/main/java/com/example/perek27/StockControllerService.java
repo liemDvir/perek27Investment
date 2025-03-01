@@ -17,6 +17,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StockControllerService extends Service {
 
     private final String STOCK_CONTROLLER_SERVICE_NAME = "StockControllerService";
@@ -25,6 +28,8 @@ public class StockControllerService extends Service {
     private final String STOCK_REFERENCE_NAME = "push";
     private static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseAuth mFirebaseAuth;
+
+    private List mObservers = new ArrayList<>();
     private final IBinder binder = new InteractionService();
     public StockControllerService() {
     }
@@ -40,6 +45,16 @@ public class StockControllerService extends Service {
         StockControllerService getService() {
             return StockControllerService.this;
         }
+    }
+
+    public void register(final Observer observer) {
+        if (!mObservers.contains(observer)) {
+            mObservers.add(observer);
+        }
+    }
+
+    public void unregister(final Observer observer) {
+        mObservers.remove(observer);
     }
 
     private void init(){
@@ -60,6 +75,7 @@ public class StockControllerService extends Service {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.d(STOCK_CONTROLLER_SERVICE_NAME, "SignInWithEmailAndPassword - successfully end");
+
 
                 }
             }
