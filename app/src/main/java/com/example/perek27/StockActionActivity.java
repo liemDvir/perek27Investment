@@ -14,15 +14,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class StockActionActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FirebaseDatabase firebaseDatabase;
     DiscoverActivity discoverActivity;
 
-    DatabaseReference ref;
     EditText  amountOfStock;
      TextView typeOfStock;
     Button buyBtn, sellBtn;
@@ -37,7 +33,6 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        firebaseDatabase = FirebaseDatabase.getInstance("https://insvestment-85820-default-rtdb.firebaseio.com/");
 
         Intent intent = getIntent();
         String stockName = intent.getStringExtra("StockName");
