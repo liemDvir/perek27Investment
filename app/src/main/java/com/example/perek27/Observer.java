@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
-public interface IObserver {
+public interface Observer {
 
     public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task);
 }
