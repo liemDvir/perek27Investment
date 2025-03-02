@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,6 +22,8 @@ public class StockModel extends Application {
     private StockControllerService mStockControllerService;
     boolean isStockControllerBind = false;
     private static StockModel mStockModel;
+
+    private final List<Observer> mObservers = new ArrayList<Observer>();
     public static StockModel GetInstance(){
         if(mStockModel == null){
             mStockModel = new StockModel();
@@ -41,6 +44,14 @@ public class StockModel extends Application {
     }
 
     public void register(final Observer observer) {
+        if (!mObservers.contains(observer)) {
+            mObservers.add(observer);
+        }
+
+        if(mStockControllerService == null){
+            Log.e("StockModel", "mStockControllerService == null");
+            return;
+        }
         mStockControllerService.register(observer);
     }
 
@@ -68,6 +79,10 @@ public class StockModel extends Application {
             StockControllerService.InteractionService interactionService = (StockControllerService.InteractionService) service;
             mStockControllerService = interactionService.getService();
             isStockControllerBind = true;
+
+            for (final Observer observer : mObservers) {
+                register(observer);
+            }
         }
 
         @Override

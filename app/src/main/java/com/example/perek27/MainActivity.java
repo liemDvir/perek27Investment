@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     StockModel mStockModel;
     Button loginButton,goRegister;
     EditText loginEmail, loginPassword;
+
+    private Observer mMainActivityObserver = new MainActivityObserver();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mStockModel = StockModel.GetInstance();
         mStockModel.Init();
+        mStockModel.register(mMainActivityObserver);
 
         //firebaseAuth = FirebaseAuth.getInstance();
 
@@ -76,24 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     password = loginPassword.getText().toString();
 
                     //TODO - disable button
-                    //loginButton.setEnabled(false);
+                    loginButton.setEnabled(false);
 
-                    //mStockModel.SignInWithEmailAndPassword(email,password);
-                    firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
-                                startActivity(intent);
-                            } else {
-                                //TODO - enable to button
-                                //loginButton.setEnabled(true);
-                                Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_LONG).show();
-
-                            }
-                        }
-                    });
+                    mStockModel.SignInWithEmailAndPassword(email,password);
                 } else {
                     Toast.makeText(MainActivity.this, "Not entered email or pass", Toast.LENGTH_LONG).show();
                 }
@@ -102,6 +91,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             Intent intent = new Intent(MainActivity.this,register.class);
             startActivity(intent);
+        }
+    }
+
+    public class MainActivityObserver implements Observer{
+
+        @Override
+        public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task) {
+            Log.d("MainActivityObserver", "SignInWithEmailAndPasswordCompleate");
+            if (task.isSuccessful()) {
+                Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+            } else {
+                //TODO - enable to button
+                loginButton.setEnabled(true);
+                Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_LONG).show();
+
+            }
         }
     }
 }
