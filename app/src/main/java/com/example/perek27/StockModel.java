@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StockModel extends Application {
@@ -38,9 +39,11 @@ public class StockModel extends Application {
     }
 
     public void Init(){
+        if(isStockControllerBind){
+            return;
+        }
         Intent serviceIntent = new Intent(this.getApplicationContext(),StockControllerService.class);
         this.getApplicationContext().bindService(serviceIntent,serviceConnection,BIND_AUTO_CREATE);
-
     }
 
     public void register(final Observer observer) {
@@ -71,6 +74,35 @@ public class StockModel extends Application {
             return;
 
         mStockControllerService.SetTransaction(tranHistory);
+    }
+
+    public ArrayList<Stock> GetAllStocksInvested()
+    {
+        //TODO - need to implement it
+        ArrayList<Stock> stocksStack =  new ArrayList<>();
+        Date currentDay = new Date(System.currentTimeMillis());
+        Stock s1 = new Stock("AAPL", 500,currentDay);
+        //Stock s2 = new Stock("NETFLIX", 200,currentDay);
+        Stock s3 = new Stock("META", 130,currentDay);
+
+        stocksStack.add(s1);
+        //stocksStack.add(s2);
+        stocksStack.add(s3);
+        return stocksStack;
+    }
+
+    public ArrayList<Stock> GetAllStocksInMarket(){
+        //TODO - need to implement it
+        ArrayList<Stock> stocksStack =  new ArrayList<>();
+        Date currentDay = new Date(System.currentTimeMillis());
+        Stock s1 = new Stock("AAPL", 500,currentDay);
+        Stock s2 = new Stock("NETFLIX", 200,currentDay);
+        Stock s3 = new Stock("META", 130,currentDay);
+
+        stocksStack.add(s1);
+        stocksStack.add(s2);
+        stocksStack.add(s3);
+        return stocksStack;
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
