@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mStockModel.Init();
         mStockModel.register(mMainActivityObserver);
 
-        //firebaseAuth = FirebaseAuth.getInstance();
-
         loginButton = (Button)findViewById(R.id.loginBtn);
         loginButton.setOnClickListener(this);
 
@@ -78,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if ((loginEmail != null) && (!loginEmail.getText().toString().isEmpty()) && (loginPassword != null) && (!loginPassword.getText().toString().isEmpty())) {
                     email = loginEmail.getText().toString();
                     password = loginPassword.getText().toString();
-
-                    //TODO - disable button
                     loginButton.setEnabled(false);
 
                     mStockModel.SignInWithEmailAndPassword(email,password);
