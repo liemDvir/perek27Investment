@@ -64,17 +64,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view)
     {
         if(view == loginButton) {
+
             if (loginButton.getText().equals("login"))
             {
                 Log.d("Strting the function", (String) loginButton.getText());
 
                 String email = "";
                 String password = "";
-                if ((loginEmail != null) && (!loginEmail.equals("")) && (loginPassword != null) && (!loginPassword.equals(""))) {
+                if ((loginEmail != null) && (!loginEmail.getText().toString().isEmpty()) && (loginPassword != null) && (!loginPassword.getText().toString().isEmpty())) {
                     email = loginEmail.getText().toString();
                     password = loginPassword.getText().toString();
 
                     //TODO - disable button
+                    //loginButton.setEnabled(false);
+
                     //mStockModel.SignInWithEmailAndPassword(email,password);
                     firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 startActivity(intent);
                             } else {
                                 //TODO - enable to button
+                                //loginButton.setEnabled(true);
                                 Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_LONG).show();
 
                             }
