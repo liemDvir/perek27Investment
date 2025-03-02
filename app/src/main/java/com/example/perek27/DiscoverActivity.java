@@ -13,16 +13,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 import java.util.Date;
 
 public class DiscoverActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FirebaseDatabase firebaseDatabase;
-
+    StockModel mStockModel;
     RecyclerView recyclerView;
     private Stock currentStock;
     Button summaryBtn, historyBtn,settingBtn;
@@ -39,15 +35,6 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ArrayList<Stock> stocksStack =  new ArrayList<>();
-        Date currentDay = new Date(System.currentTimeMillis());
-        Stock s1 = new Stock("AAPL", 500,currentDay);
-        Stock s2 = new Stock("NETFLIX", 200,currentDay);
-        Stock s3 = new Stock("META", 130,currentDay);
-
-        stocksStack.add(s1);
-        stocksStack.add(s2);
-        stocksStack.add(s3);
 
         summaryBtn = (Button)findViewById(R.id.summaryButton);
         summaryBtn.setOnClickListener(this);
@@ -62,10 +49,11 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("stock").push();
-        ref.setValue(stocksStack);
+        mStockModel = StockModel.GetInstance();
+        mStockModel.Init();
+        ArrayList<Stock> allStocks = mStockModel.GetAllStocksInMarket();
 
-        stockAdapter stockAdapter = new stockAdapter(DiscoverActivity.this,stocksStack, item -> {
+        stockAdapter stockAdapter = new stockAdapter(DiscoverActivity.this,allStocks, item -> {
             currentStock = item;
             Intent tmpIntent = new Intent(DiscoverActivity.this, StockActionActivity.class);
             tmpIntent.putExtra("StockName", item.getTypeOfStock());
