@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +44,12 @@ public class StockControllerService extends Service {
     private final String FIREBASE_URL = "https://insvestment-85820-default-rtdb.firebaseio.com/";
 
     private final String STOCK_HISTORY_REFERENCE_NAME = "push";
+
+    private final String STOCK_TABLE_NAME = "stock";
     private static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseAuth mFirebaseAuth;
+
+    private static String mUID;
 
     private final List<Observer> mObservers = Collections.synchronizedList(new ArrayList<Observer>());
     private final IBinder binder = new InteractionService();
@@ -115,11 +120,11 @@ public class StockControllerService extends Service {
         }
     }
 
-    public ArrayList<Stock> GetAllStocksInvested(){
+    public void GetAllStocksInvested(){
 
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("stock").addValueEventListener(new ValueEventListener() {
+        mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.d("onDataChange", snapshot.toString());
@@ -127,19 +132,19 @@ public class StockControllerService extends Service {
                 ArrayList<Stock> stocksStack =  new ArrayList<>();
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
-                    GenericTypeIndicator<List<Stock>> t = new GenericTypeIndicator<List<Stock>>() {};
-                    List<Stock> stockList = dataSnapshot.getValue(t);
-                    if (stockList != null) {
-                        for (Stock stock : stockList) {
-                            Log.d("Firebase", "Stock Name: " + stock.getTypeOfStock() + ", Price: " + stock.getAmountOfStock());
-                        }
-                    }
-
-                    //transactionHistoryArr.add(p);
+                    float amountOfStock = dataSnapshot.child("amountOfStock").getValue(float.class);
+                    String typeOfStock = dataSnapshot.child("typeOfStock").getValue(String.class);
+                    Date d = dataSnapshot.child("lastUpdate").getValue(Date.class);
+                    Stock s = new Stock(typeOfStock,amountOfStock,d);
+                    stocksStack.add(s);
                 }
-                //TransactionHistoryAdapter adapter = new TransactionHistoryAdapter(TransactionHistoryActivity.this, transactionHistoryArr);
-                //recyclerView.setAdapter(adapter);
 
+                synchronized (mObservers){
+                    for (final Observer observer : mObservers) {
+                        observer.GetAllStocksInvested(stocksStack);
+                    }
+                }
+                Log.d("onDataChange", "ended");
             }
 
             @Override
@@ -147,8 +152,6 @@ public class StockControllerService extends Service {
 
             }
         });
-
-        return null;
     }
 
     public static class RetrofitClient {
@@ -218,6 +221,15 @@ public class StockControllerService extends Service {
                 /*if(task.isSuccessful()){
                     Log.d(STOCK_CONTROLLER_SERVICE_NAME, "SignInWithEmailAndPassword - successfully end");
                 }*/
+                mUID = mFirebaseAuth.getUid();
+                /*mFirebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = mFirebaseDatabase.getReference("stock");
+                Stock s1 = new Stock("META", 111, Calendar.getInstance().getTime());
+                Stock s2 = new Stock("AAPL", 222, Calendar.getInstance().getTime());
+                ArrayList<Stock> stocksStack =  new ArrayList<>();
+                stocksStack.add(s1);
+                stocksStack.add(s2);
+                myRef.child(mUID).setValue(stocksStack);*/
                 //Notify observers
                 synchronized (mObservers){
                     for (final Observer observer : mObservers) {
@@ -234,11 +246,16 @@ public class StockControllerService extends Service {
     {
         Log.d(STOCK_CONTROLLER_SERVICE_NAME,"start getAllCash");
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        final float[] currentCash = {0};
         mFirebaseDatabase.getReference("user").child(mFirebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                UserData currentUser = snapshot.getValue(UserData.class);
+                if (currentUser!= null)
+                {
+                    currentCash[0] = currentUser.getCash();
+                }
             }
 
             @Override
@@ -246,7 +263,7 @@ public class StockControllerService extends Service {
 
             }
         });
-        return 0;
+        return currentCash[0];
 
 
     }
