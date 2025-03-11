@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UserInfoActivity"
+    tools:context=".SummaryActivity"
     android:background="@color/black">
 
     <TableRow
@@ -32,7 +32,7 @@
         android:layout_gravity="center"
         android:textColor="@color/white"
         android:textSize="25sp"
-        android:id="@+id/sumMoney"
+        android:id="@+id/sumMoneyXml"
         />
     <TableRow
         android:layout_width="match_parent"
@@ -81,6 +81,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:layout_margin="10dp"
+            android:id="@+id/sumMoneyInvestedXml"
             />
     </TableRow>
 
@@ -91,6 +92,12 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:layout_marginTop="20dp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycleSummary"
         />
 
     <View

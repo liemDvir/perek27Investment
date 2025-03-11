@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class DiscoverActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -53,14 +52,14 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
         mStockModel.Init();
         ArrayList<Stock> allStocks = mStockModel.GetAllStocksInMarket();
 
-        stockAdapter stockAdapter = new stockAdapter(DiscoverActivity.this,allStocks, item -> {
+        DiscoverAdapter DiscoverAdapter = new DiscoverAdapter(DiscoverActivity.this,allStocks, item -> {
             currentStock = item;
             Intent tmpIntent = new Intent(DiscoverActivity.this, StockActionActivity.class);
             tmpIntent.putExtra("StockName", item.getTypeOfStock());
             startActivity(tmpIntent);
 
         });
-        recyclerView.setAdapter(stockAdapter);
+        recyclerView.setAdapter(DiscoverAdapter);
 
     }
     public Stock getCurrentStock()
@@ -73,15 +72,15 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if (view == summaryBtn)
         {
-            Intent intent = new Intent(DiscoverActivity.this,UserInfoActivity.class);
+            Intent intent = new Intent(DiscoverActivity.this, SummaryActivity.class);
             startActivity(intent);
         } else if (view == historyBtn)
         {
-            Intent intent = new Intent(DiscoverActivity.this,postListActivity.class);
+            Intent intent = new Intent(DiscoverActivity.this, TransactionHistoryActivity.class);
             startActivity(intent);
         } else if (view == settingBtn)
         {
-            Intent intent = new Intent(DiscoverActivity.this,settingsActivity.class);
+            Intent intent = new Intent(DiscoverActivity.this, SettingsActivity.class);
             startActivity(intent);
         }
 

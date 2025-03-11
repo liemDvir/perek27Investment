@@ -2,12 +2,11 @@ package com.example.perek27;
 
 import android.graphics.Bitmap;
 import android.util.Base64;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
-public class userData {
+public class UserData {
    private String firstName;
     private String lastName;
     private String email;
@@ -15,7 +14,7 @@ public class userData {
     private Date date;
     private float cash;
     private String imageView;
-    userData(String newFirstName,String newLastName,String newEmail,Date newDate,String newPassword, String newImageView)
+    UserData(String newFirstName, String newLastName, String newEmail, Date newDate, String newPassword, String newImageView)
     {
         this.firstName = newFirstName;
         this.lastName = newLastName;
@@ -26,7 +25,7 @@ public class userData {
         cash = 5000; // כמות התחלתית של כסף
     }
 
-    public userData()
+    public UserData()
     {
 
     }

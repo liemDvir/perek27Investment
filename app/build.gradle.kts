@@ -27,8 +27,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    packagingOptions {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+        }
     }
 }
 
@@ -44,4 +50,18 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation("com.jjoe64:graphview:4.2.2")
+    implementation("com.google.guava:guava:32.1.2-jre")
+    api("org.apache.juneau:juneau-marshall:8.2.0")
+
+    //implementation("com.android.support:appcompat-v7:27.1.1")
+    //implementation("com.android.support:support-compat:27.1.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.core:core-ktx:1.13.0")
+
+    implementation("com.jjoe64:graphview:4.2.2") {
+        exclude(group = "com.android.support")
+    }
 }

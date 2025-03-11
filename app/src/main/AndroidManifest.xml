@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".StockModel"
@@ -19,22 +20,22 @@
             android:exported="true"></service>
 
         <activity
-            android:name=".settingsActivity"
+            android:name=".SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".DiscoverActivity"
             android:exported="false" />
         <activity
-            android:name=".postListActivity"
+            android:name=".TransactionHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".UserInfoActivity"
+            android:name=".SummaryActivity"
             android:exported="false" />
         <activity
             android:name=".StockActionActivity"
             android:exported="false" />
         <activity
-            android:name=".register"
+            android:name=".Register"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

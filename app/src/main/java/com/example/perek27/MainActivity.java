@@ -16,17 +16,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-
-import com.google.firebase.Firebase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    FirebaseAuth firebaseAuth;
+
     StockModel mStockModel;
     Button loginButton,goRegister;
     EditText loginEmail, loginPassword;
@@ -85,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (view == goRegister)
         {
-            Intent intent = new Intent(MainActivity.this,register.class);
+            Intent intent = new Intent(MainActivity.this, Register.class);
             startActivity(intent);
         }
     }
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("MainActivityObserver", "SignInWithEmailAndPasswordCompleate");
             if (task.isSuccessful()) {
                 Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+                Intent intent = new Intent(MainActivity.this, SummaryActivity.class);
                 startActivity(intent);
             } else {
                 //TODO - enable to button

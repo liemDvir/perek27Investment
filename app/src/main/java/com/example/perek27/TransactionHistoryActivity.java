@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class postListActivity extends AppCompatActivity implements View.OnClickListener {
+public class TransactionHistoryActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView recyclerView;
     FirebaseDatabase firebaseDatabase;
     ArrayList<TransactionHistory> transactionHistoryArr;
@@ -32,7 +32,7 @@ public class postListActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_post_list);
+        setContentView(R.layout.activity_transaction_history);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -64,7 +64,7 @@ public class postListActivity extends AppCompatActivity implements View.OnClickL
                     TransactionHistory p = dataSnapshot.getValue(TransactionHistory.class);
                     transactionHistoryArr.add(p);
                 }
-                postAdapter adapter = new postAdapter(postListActivity.this, transactionHistoryArr);
+                TransactionHistoryAdapter adapter = new TransactionHistoryAdapter(TransactionHistoryActivity.this, transactionHistoryArr);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -83,15 +83,15 @@ public class postListActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if (view == summaryBtn)
         {
-            Intent intent = new Intent(postListActivity.this,UserInfoActivity.class);
+            Intent intent = new Intent(TransactionHistoryActivity.this, SummaryActivity.class);
             startActivity(intent);
         } else if (view == discoverBtn)
         {
-            Intent intent = new Intent(postListActivity.this, DiscoverActivity.class);
+            Intent intent = new Intent(TransactionHistoryActivity.this, DiscoverActivity.class);
             startActivity(intent);
         } else if (view == settingBtn)
         {
-            Intent intent =new Intent(postListActivity.this,settingsActivity.class);
+            Intent intent =new Intent(TransactionHistoryActivity.this, SettingsActivity.class);
             startActivity(intent);
         }
 

@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class settingsActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
@@ -73,7 +73,7 @@ public class settingsActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot)
                 {
-                    userData user = snapshot.getValue(userData.class);
+                    UserData user = snapshot.getValue(UserData.class);
                     if(user!=null)
                     {
                         String fname = user.getFirstName();
@@ -110,15 +110,15 @@ public class settingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if (view == summaryBtn)
         {
-            Intent intent = new Intent(settingsActivity.this, UserInfoActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, SummaryActivity.class);
             startActivity(intent);
         } else if (view == discoverBtn)
         {
-            Intent intent = new Intent(settingsActivity.this, DiscoverActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, DiscoverActivity.class);
             startActivity(intent);
         } else if (view == historyBtn)
         {
-            Intent intent = new Intent(settingsActivity.this,postListActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, TransactionHistoryActivity.class);
             startActivity(intent);
         } else if (view == logoutBtn)
         {

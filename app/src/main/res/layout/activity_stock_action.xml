@@ -9,13 +9,16 @@
     tools:context=".StockActionActivity"
     android:background="@color/black">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="investment"
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="back"
         android:textAlignment="center"
-        android:textColor="#871919"
-        android:textSize="30dp" />
+        android:textColor ="@color/black"
+        android:textSize="15dp"
+        android:backgroundTint="#871919"
+        android:id="@+id/goBackXml"
+        />
 
     <TextView
         android:layout_width="300dp"
@@ -34,8 +37,9 @@
         android:layout_gravity="center"
         android:hint="enter the amount of money to invest"
         android:id="@+id/amountMoney"
-        android:inputType="number"
+        android:inputType="phone"
         android:textColorHint="@color/white"
+
         />
     <TextView
         android:layout_width="match_parent"
@@ -44,6 +48,12 @@
         android:textColor="@color/white"
         android:layout_marginLeft="60dp"
         android:textSize="20dp"
+        />
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/graphViewXml"
         />
 
     <TableRow

@@ -4,32 +4,32 @@ import java.util.Date;
 
 public class Stock
 {
-    private float moneyInvested;
+    private float amountOfStock; // כמות המניות שהשקיע
 
-    private float amountOfStock;
+    private String typeOfStock;// שם המניה
 
-    private float currentValue;
-    private String typeOfStock;
+    private Date lastUpdate;// התאריך האחרון
 
-    private Date lastUpdate;
+    //private float moneyInvested;// כמות הכסף שהלקוח השקיע
 
-    Stock(String newTypeOfStock, float newMoneyInvested , Date newDate)
+    //private float currentValue;// ערך מעודכן למניה אחת
+
+    public Stock(String newTypeOfStock, float newAmountOfStock/*,float newCurrentValue*/,Date newDate)
     {
-        this.moneyInvested = newMoneyInvested;
+        this.amountOfStock = newAmountOfStock;
+        //this.moneyInvested = currentValue*newAmountOfStock;
         this.typeOfStock = newTypeOfStock;
         this.lastUpdate = newDate;
+        //this.currentValue = newCurrentValue;
+
     }
 
     public Stock(){
 
     }
-
-    public float getValue() {
-        return moneyInvested;
-    }
-    public void setMoneyInvested(int moneyInvested) {
+    /*public void setMoneyInvested(int moneyInvested) {
         this.moneyInvested = moneyInvested;
-    }
+    }*/
 
     public String getTypeOfStock() {
         return typeOfStock;
@@ -39,4 +39,15 @@ public class Stock
         return lastUpdate;
     }
 
+    public float getAmountOfStock() {
+        return amountOfStock;
+    }
+
+    /*public float getCurrentValue() {
+        return currentValue;
+    }*/
+
+    /*public float getMoneyInvested() {
+        return moneyInvested;
+    }*/
 }

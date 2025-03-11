@@ -1,7 +1,5 @@
 package com.example.perek27;
 
-import static com.example.perek27.R.id.imageRegister;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,7 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 import java.util.Date;
 
-public class register extends AppCompatActivity implements View.OnClickListener {
+public class Register extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseAuth firebaseAuth;
     Button registerButton, dateOfBirthButton, takePicture;
@@ -99,26 +96,26 @@ public class register extends AppCompatActivity implements View.OnClickListener 
                         String lName = lastNameRegister.getText().toString();
                         String uid = firebaseAuth.getCurrentUser().getUid();
                         String em = firebaseAuth.getCurrentUser().getEmail();
-                        userData user = new userData(fName,lName,em,date,uid,"");
+                        UserData user = new UserData(fName,lName,em,date,uid,"");
                         user.setPicAsString(bitmap);
                         DatabaseReference ref = firebaseDatabase.getReference("user").child(uid);
                         ref.setValue(user);
-                        Toast.makeText(register.this, "Successfully registered", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(register.this,UserInfoActivity.class);
+                        Toast.makeText(Register.this, "Successfully registered", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(Register.this, SummaryActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(register.this, "Registration Error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Register.this, "Registration Error", Toast.LENGTH_LONG).show();
                     }
 
                 }
             });
         } else if (view == dateOfBirthButton) {
-            Toast.makeText(register.this, "uploading", Toast.LENGTH_LONG).show();
+            Toast.makeText(Register.this, "uploading", Toast.LENGTH_LONG).show();
             Calendar systemCalender = Calendar.getInstance();
             int year = systemCalender.get(Calendar.YEAR);
             int month = systemCalender.get(Calendar.MONTH);
             int day = systemCalender.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog datePickerDialog = new DatePickerDialog(register.this, new SetDate(), year, month, day);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(Register.this, new SetDate(), year, month, day);
             datePickerDialog.show();
 
         } else if (view == takePicture)
@@ -128,7 +125,7 @@ public class register extends AppCompatActivity implements View.OnClickListener 
         }
         else
         {
-            Toast.makeText(register.this, "Not entered email or pass", Toast.LENGTH_LONG).show();
+            Toast.makeText(Register.this, "Not entered email or pass", Toast.LENGTH_LONG).show();
         }
 
     }

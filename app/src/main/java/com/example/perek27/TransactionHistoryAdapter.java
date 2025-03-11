@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class postAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder> {
+public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.postViewHolder> {
     private Context context;
     private ArrayList<TransactionHistory> arrayList;
 
-    public postAdapter(Context newContext, ArrayList<TransactionHistory> newArrayList)
+    public TransactionHistoryAdapter(Context newContext, ArrayList<TransactionHistory> newArrayList)
     {
         this.context = newContext;
         this.arrayList = newArrayList;
@@ -26,7 +26,7 @@ public class postAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder
     public postViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.rowinstockhistory,null);
+        View view = inflater.inflate(R.layout.row_in_transaction_history,null);
         return new postViewHolder(view);
     }
 

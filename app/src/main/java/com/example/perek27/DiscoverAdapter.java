@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class stockAdapter extends RecyclerView.Adapter<stockAdapter.stockViewHolder>
+public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.stockViewHolder>
 {
 
     private Context context;
@@ -19,7 +19,7 @@ public class stockAdapter extends RecyclerView.Adapter<stockAdapter.stockViewHol
 
     private OnItemClickListener listener;
 
-    public stockAdapter(Context newContext, ArrayList<Stock> newArrayList, OnItemClickListener newListener)
+    public DiscoverAdapter(Context newContext, ArrayList<Stock> newArrayList, OnItemClickListener newListener)
     {
         this.context = newContext;
         this.arrayList = newArrayList;
@@ -28,18 +28,19 @@ public class stockAdapter extends RecyclerView.Adapter<stockAdapter.stockViewHol
 
     @NonNull
     @Override
-    public stockAdapter.stockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DiscoverAdapter.stockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.rowindiscover,null);
-        return new stockAdapter.stockViewHolder(view);
+        View view = inflater.inflate(R.layout.row_in_discover,null);
+        return new DiscoverAdapter.stockViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull stockAdapter.stockViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull DiscoverAdapter.stockViewHolder holder, int position)
     {
         Stock stock = arrayList.get(position);
 
-        holder.amountOfMoney.setText(stock.getValue() + "");
+        //holder.amountOfMoney.setText(stock.getCurrentValue() + "");
+        holder.amountOfMoney.setText("bla bla" + "");
         holder.stockInvested.setText(stock.getTypeOfStock());
 
         holder.itemView.setOnClickListener(view -> listener.onItemClick(stock));
@@ -59,6 +60,7 @@ public class stockAdapter extends RecyclerView.Adapter<stockAdapter.stockViewHol
             super(itemView);
             amountOfMoney = itemView.findViewById(R.id.amountOfMoney);
             stockInvested = itemView.findViewById(R.id.nameOfStock);
+
 
 
 
