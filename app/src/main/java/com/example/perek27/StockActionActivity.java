@@ -1,7 +1,9 @@
 package com.example.perek27;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,9 +25,13 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
     DiscoverActivity discoverActivity;
 
     EditText  amountOfStock;
-     TextView typeOfStock;
+    TextView typeOfStock;
     Button buyBtn, sellBtn, goBackBtn;
     Stock currentStock;
+
+    Dialog d;
+
+    Button dialogPositiveBtn, dialogNegativeBtn;
 
     GraphView graphView;
     //private Observer mMainActivityObserver = new MainActivity.MainActivityObserver();
@@ -88,17 +94,42 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
          if (view == buyBtn)
          {
-             if (!typeOfStock.getText().toString().isEmpty() && 0 < Integer.parseInt(amountOfStock.getText().toString()) && !amountOfStock.getText().toString().isEmpty()) {
-                 String strType = typeOfStock.getText().toString();
-                 int intAmount = Integer.parseInt(amountOfStock.getText().toString());
-                 TransactionHistory transactionHistory1 = new TransactionHistory(intAmount, strType,true);// means true because buy is positive
-                 StockModel.GetInstance().SetTransaction(transactionHistory1);
-                 Toast.makeText(StockActionActivity.this, "Successfully bought", Toast.LENGTH_LONG).show();
-                 Intent intent = new Intent(StockActionActivity.this, SummaryActivity.class);
-                 finish();
+             sellBtn.setEnabled(false);
+             buyBtn.setEnabled(false);
+             createDialog();
+             if (view == dialogPositiveBtn)
+             {
+                 d.dismiss();
+                if (!typeOfStock.getText().toString().isEmpty() && 0 < Integer.parseInt(amountOfStock.getText().toString()) && !amountOfStock.getText().toString().isEmpty()) {
+                    String strType = typeOfStock.getText().toString();
+                    int intAmount = Integer.parseInt(amountOfStock.getText().toString());
+                    //TransactionHistory transactionHistory1 = new TransactionHistory(intAmount, strType,true);// means true because buy is positive
+                    //StockModel.GetInstance().SetTransaction(transactionHistory1);
+                    Toast.makeText(StockActionActivity.this, "Successfully bought", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(StockActionActivity.this, SummaryActivity.class);
+                     finish();
+                }
+             }else {
+                 sellBtn.setEnabled(true);
+                 buyBtn.setEnabled(true);
+                 d.dismiss();
+
              }
 
          } else if (view == sellBtn) {
+             createDialog();
+             sellBtn.setEnabled(false);
+             buyBtn.setEnabled(false);
+            /* if (view == dialogPositiveBtn )
+             {
+                 /// do the selling action
+             }
+             else if(view == dialogNegativeBtn){
+                 d.dismiss();
+                 sellBtn.setEnabled(true);
+                 buyBtn.setEnabled(true);
+             }*/
+
 
 
          } else if (view == goBackBtn)
@@ -109,5 +140,30 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(StockActionActivity.this, "Error", Toast.LENGTH_LONG).show();
         }
 
+    }
+    public void createDialog()
+    {
+        Log.d("createDialog","Start createDialog");
+        d = new Dialog(this);
+        d.setContentView(R.layout.dialog_verification_action);
+        d.setCancelable(true);
+        dialogPositiveBtn = (Button)d.findViewById(R.id.yesButton);
+        dialogPositiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        dialogNegativeBtn = (Button)d.findViewById(R.id.noButton);
+        dialogNegativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                d.dismiss();
+                sellBtn.setEnabled(true);
+                buyBtn.setEnabled(true);
+            }
+        });
+        d.show();
+        Log.d("createDialog","End createDialog");
     }
 }

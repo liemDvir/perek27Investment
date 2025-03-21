@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,7 +14,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class DiscoverActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,6 +26,8 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
     RecyclerView recyclerView;
     private Stock currentStock;
     Button summaryBtn, historyBtn,settingBtn;
+
+    private Observer discoverActivityObserver = new DiscoverActivityObserver();
     public DiscoverActivity(){
 
     }
@@ -50,16 +57,17 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
 
         mStockModel = StockModel.GetInstance();
         mStockModel.Init();
-        ArrayList<Stock> allStocks = mStockModel.GetAllStocksInMarket();
+        mStockModel.register(discoverActivityObserver);
+        /*ArrayList<Stock> allStocks = */mStockModel.GetAllStocksInMarket();
 
-        DiscoverAdapter DiscoverAdapter = new DiscoverAdapter(DiscoverActivity.this,allStocks, item -> {
+        /*DiscoverAdapter DiscoverAdapter = new DiscoverAdapter(DiscoverActivity.this,allStocks, item -> {
             currentStock = item;
             Intent tmpIntent = new Intent(DiscoverActivity.this, StockActionActivity.class);
-            tmpIntent.putExtra("StockName", item.getTypeOfStock());
+            tmpIntent.putExtra("StockName", item.getStockName());
             startActivity(tmpIntent);
 
         });
-        recyclerView.setAdapter(DiscoverAdapter);
+        recyclerView.setAdapter(DiscoverAdapter);*/
 
     }
     public Stock getCurrentStock()
@@ -84,6 +92,61 @@ public class DiscoverActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
         }
 
+    }
+
+    public class DiscoverActivityObserver implements Observer{
+        @Override
+        public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task) {
+
+        }
+
+        @Override
+        public void GetAllStocksInvested(List<Stock> stockInvested) {
+
+        }
+
+        @Override
+        public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
+
+        }
+
+        @Override
+        public void GetAllStocksInMarket(List<Stock> stocksList) {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // ✅ UI operations here (e.g., update TextView, Toast)
+                    DiscoverAdapter DiscoverAdapter = new DiscoverAdapter(DiscoverActivity.this,new ArrayList<>(stocksList), item -> {
+                        currentStock = item;
+                        Intent tmpIntent = new Intent(DiscoverActivity.this, StockActionActivity.class);
+                        tmpIntent.putExtra("StockName", item.getStockName());
+                        startActivity(tmpIntent);
+
+                    });
+                    recyclerView.setAdapter(DiscoverAdapter);
+                }
+            });
+
+            /*DiscoverAdapter DiscoverAdapter = new DiscoverAdapter(DiscoverActivity.this,new ArrayList<>(stocksList), item -> {
+            currentStock = item;
+            Intent tmpIntent = new Intent(DiscoverActivity.this, StockActionActivity.class);
+            tmpIntent.putExtra("StockName", item.getStockName());
+            startActivity(tmpIntent);
+
+            });
+            recyclerView.setAdapter(DiscoverAdapter);*/
+        }
+
+        @Override
+        public void getALLCash(float cash) {
+
+        }
+
+        @Override
+        public void GetAllUserData(UserData userData) {
+
+        }
     }
 
 }

@@ -38,7 +38,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.SummaryV
     public void onBindViewHolder(@NonNull SummaryAdapter.SummaryViewHolder holder, int position) {
         Stock stock = arrayList.get(position);
 
-        holder.nameOfStock.setText(stock.getTypeOfStock());
+        holder.nameOfStock.setText(stock.getStockName());
         //holder.priceOfStock.setText(String.valueOf(stock.getCurrentValue()));
         holder.priceOfStock.setText(String.valueOf(500));
         holder.AmountOfSHares.setText(String.valueOf(stock.getAmountOfStock()));

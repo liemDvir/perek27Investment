@@ -19,6 +19,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -73,9 +77,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     email = loginEmail.getText().toString();
                     password = loginPassword.getText().toString();
                     loginButton.setEnabled(false);
-
+                    goRegister.setEnabled(false);
                     mStockModel.SignInWithEmailAndPassword(email,password);
-                } else {
+                }
+                else {
                     Toast.makeText(MainActivity.this, "Not entered email or pass", Toast.LENGTH_LONG).show();
                 }
             }
@@ -96,11 +101,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this, SummaryActivity.class);
                 startActivity(intent);
             } else {
-                //TODO - enable to button
+                goRegister.setEnabled(true);
                 loginButton.setEnabled(true);
                 Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_LONG).show();
 
             }
+        }
+
+        @Override
+        public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
+
+        }
+
+        @Override
+        public void GetAllStocksInMarket(List<Stock> stocksList) {
+
+        }
+
+        @Override
+        public void GetAllStocksInvested(List<Stock> stockInvested) {
+
+        }
+
+        @Override
+        public void getALLCash(float cash) {
+
+        }
+
+        @Override
+        public void GetAllUserData(UserData userData) {
+
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.perek27;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,9 @@ import java.util.ArrayList;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.postViewHolder> {
     private Context context;
-    private ArrayList<TransactionHistory> arrayList;
+    private ArrayList<Transaction> arrayList;
 
-    public TransactionHistoryAdapter(Context newContext, ArrayList<TransactionHistory> newArrayList)
+    public TransactionHistoryAdapter(Context newContext, ArrayList<Transaction> newArrayList)
     {
         this.context = newContext;
         this.arrayList = newArrayList;
@@ -33,9 +32,9 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     @Override
     public void onBindViewHolder(@NonNull postViewHolder holder, int position)
     {
-        TransactionHistory transactionHistory = arrayList.get(position);
+        Transaction transaction = arrayList.get(position);
 
-        if (transactionHistory.getIsBuy()) // if true means he sell the stock, else he bought
+        /*if (transactionHistory.getIsBuy()) // if true means he sell the stock, else he bought
         {
             holder.amountOfStock.setText("+" + transactionHistory.getMoneyInvested());
             holder.amountOfStock.setTextColor(Color.parseColor("#4CAF50"));
@@ -46,8 +45,8 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
             holder.amountOfStock.setTextColor(Color.parseColor("#871919"));
             holder.typeOfStock.setTextColor(Color.parseColor("#871919"));
 
-         }
-        holder.typeOfStock.setText(transactionHistory.getTypeOfStock());
+         }*/
+        holder.typeOfStock.setText(transaction.getStockName());
 
 
     }

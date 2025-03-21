@@ -16,6 +16,165 @@
         android:textColor="#871919"
         android:textSize="30dp"
         />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageView"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:cardCornerRadius="20dp"
+        android:backgroundTint="@color/black"
+        android:layout_marginTop="20dp"
+        >
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            >
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="first name"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="*first name*"
+                android:id="@+id/firstNameTextView"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+
+                />
+
+            </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            >
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="last name"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="*last name*"
+                android:id="@+id/lastNameTextView"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="140dp"
+            >
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="email"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="*email*"
+                android:id="@+id/emailTextView"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="210dp"
+            >
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="date"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="*date*"
+                android:id="@+id/dateTextView"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+
+        </TableRow>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
@@ -23,41 +182,7 @@
         android:layout_gravity="center"
         android:backgroundTint="#871919"
         android:text="logout"
-        android:textAlignment="center" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="first name"
-        android:id="@+id/firstNameTextView"
-    />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="last name"
-        android:id="@+id/lastNameTextView"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="email"
-        android:id="@+id/emailTextView"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="password"
-        android:id="@+id/passwordTextView"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="date"
-        android:id="@+id/dateTextView"
-        />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:textAlignment="center"
         />
 
     <View
@@ -74,7 +199,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="summay"
+            android:text="summary"
             android:backgroundTint="#871919"
             android:textColor="@color/white"
             android:id="@+id/summaryButton"

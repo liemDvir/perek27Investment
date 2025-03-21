@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class SummaryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,11 +32,9 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     Button logout, historyBtn, discoverBtn, settingBtn;
 
     TextView cashAmountOfMoney, sumAllMoney,sumAllMoneyInvested;
-    FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
     private Stock currentStock;
 
-    //private Observer mMainActivityObserver = new MainActivity.MainActivityObserver();
+    private Observer mSummayActivityObserver = new MainActivityObserver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
         mStockModel = StockModel.GetInstance();
         mStockModel.Init();
-        //mStockModel.register(mMainActivityObserver);
+        mStockModel.register(mSummayActivityObserver);
 
         setContentView(R.layout.activity_summary);
 
@@ -72,45 +72,13 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
         sumAllMoneyInvested.setText(String.valueOf(mStockModel.GetSumStocksInvested()));
         sumAllMoney.setText(String.valueOf(mStockModel.GetSumOfAllMoney()));
-        cashAmountOfMoney.setText((String.valueOf(mStockModel.GetAllCash())));
 
         recyclerView = (RecyclerView)findViewById(R.id.recycleSummary);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<Stock> allStocksInvestedArr = mStockModel.GetAllStocksInvested();
-        //TODO - check if list is empty or null
-        SummaryAdapter summaryAdapter = new SummaryAdapter(SummaryActivity.this, allStocksInvestedArr,item -> {
-        currentStock = item;
-        Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
-        tmpIntent.putExtra("StockName", currentStock.getTypeOfStock());
-        startActivity(tmpIntent);
-        });
-        recyclerView.setAdapter(summaryAdapter);
-
-
-        /// need to transform the code to the controller, the code is how to get data from the firebase
-        /*if(firebaseAuth.getCurrentUser()!= null)
-        {
-            (firebaseDatabase.getReference("user").child(firebaseAuth.getCurrentUser().getUid())).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    UserData user = snapshot.getValue(UserData.class);
-                    if (user!=null)
-                    {
-                        String cash = String.valueOf(user.getCash());
-                        cashAmountOfMoney.setText(cash);
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }*/
-
+        mStockModel.GetAllStocksInvested();
+        mStockModel.GetAllCash();
 
     }
 
@@ -137,6 +105,37 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task) {
+
+        }
+
+        @Override
+        public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
+
+        }
+
+        @Override
+        public void GetAllStocksInMarket(List<Stock> stocksList) {
+
+        }
+
+        @Override
+        public void GetAllStocksInvested(List<Stock> stockInvested) {
+            SummaryAdapter summaryAdapter = new SummaryAdapter(SummaryActivity.this, new ArrayList<>(stockInvested),item -> {
+                currentStock = item;
+                Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
+                tmpIntent.putExtra("StockName", currentStock.getStockName());
+                startActivity(tmpIntent);
+            });
+            recyclerView.setAdapter(summaryAdapter);
+        }
+
+        @Override
+        public void getALLCash(float cash) {
+            cashAmountOfMoney.setText((String.valueOf(cash)));
+        }
+
+        @Override
+        public void GetAllUserData(UserData userDate) {
 
         }
     }

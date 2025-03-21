@@ -40,8 +40,8 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.stockV
         Stock stock = arrayList.get(position);
 
         //holder.amountOfMoney.setText(stock.getCurrentValue() + "");
-        holder.amountOfMoney.setText("bla bla" + "");
-        holder.stockInvested.setText(stock.getTypeOfStock());
+        holder.amountOfMoney.setText(stock.getAmountOfStock()+"");
+        holder.stockInvested.setText(stock.getStockName());
 
         holder.itemView.setOnClickListener(view -> listener.onItemClick(stock));
 

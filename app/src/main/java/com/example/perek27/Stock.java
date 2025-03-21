@@ -1,53 +1,36 @@
 package com.example.perek27;
 
-import java.util.Date;
-
 public class Stock
 {
-    private float amountOfStock; // כמות המניות שהשקיע
 
-    private String typeOfStock;// שם המניה
+    private String mStockName;
+    private float mAmountOfStock;
 
-    private Date lastUpdate;// התאריך האחרון
-
-    //private float moneyInvested;// כמות הכסף שהלקוח השקיע
-
-    //private float currentValue;// ערך מעודכן למניה אחת
-
-    public Stock(String newTypeOfStock, float newAmountOfStock/*,float newCurrentValue*/,Date newDate)
+    public Stock()
     {
-        this.amountOfStock = newAmountOfStock;
-        //this.moneyInvested = currentValue*newAmountOfStock;
-        this.typeOfStock = newTypeOfStock;
-        this.lastUpdate = newDate;
-        //this.currentValue = newCurrentValue;
 
     }
-
-    public Stock(){
-
-    }
-    /*public void setMoneyInvested(int moneyInvested) {
-        this.moneyInvested = moneyInvested;
-    }*/
-
-    public String getTypeOfStock() {
-        return typeOfStock;
+    public Stock(String stockName, float amountOfStock)
+    {
+        mStockName = stockName;
+        mAmountOfStock = amountOfStock;
     }
 
-    public Date getLastUpdate() {
-        return lastUpdate;
+
+    public String getStockName() {
+        return mStockName;
+    }
+
+    public void setStockName(String stockName) {
+        this.mStockName = stockName;
     }
 
     public float getAmountOfStock() {
-        return amountOfStock;
+        return mAmountOfStock;
     }
 
-    /*public float getCurrentValue() {
-        return currentValue;
-    }*/
+    public void setAmountOfStock(float amountOfStock) {
+        this.mAmountOfStock = amountOfStock;
+    }
 
-    /*public float getMoneyInvested() {
-        return moneyInvested;
-    }*/
 }

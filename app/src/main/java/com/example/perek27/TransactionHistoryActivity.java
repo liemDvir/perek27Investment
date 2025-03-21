@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class TransactionHistoryActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView recyclerView;
     FirebaseDatabase firebaseDatabase;
-    ArrayList<TransactionHistory> transactionHistoryArr;
+    ArrayList<Transaction> transactionArr;
 
     Button summaryBtn, discoverBtn, settingBtn;
 
@@ -58,13 +58,13 @@ public class TransactionHistoryActivity extends AppCompatActivity implements Vie
         firebaseDatabase.getReference("push").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                transactionHistoryArr = new ArrayList<>();
+                transactionArr = new ArrayList<>();
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
-                    TransactionHistory p = dataSnapshot.getValue(TransactionHistory.class);
-                    transactionHistoryArr.add(p);
+                    Transaction p = dataSnapshot.getValue(Transaction.class);
+                    transactionArr.add(p);
                 }
-                TransactionHistoryAdapter adapter = new TransactionHistoryAdapter(TransactionHistoryActivity.this, transactionHistoryArr);
+                TransactionHistoryAdapter adapter = new TransactionHistoryAdapter(TransactionHistoryActivity.this, transactionArr);
                 recyclerView.setAdapter(adapter);
 
             }

@@ -144,11 +144,6 @@
             android:backgroundTint="#871919"
             android:id="@+id/settingButton"
             />
-
-
-
-
-
     </TableRow>
 
 

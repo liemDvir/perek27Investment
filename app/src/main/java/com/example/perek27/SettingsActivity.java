@@ -14,11 +14,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,8 +29,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     FirebaseDatabase firebaseDatabase;
     Button summaryBtn, discoverBtn, historyBtn, logoutBtn;
 
-    TextView firstNameTxt, lastNameTxt, emailTxt,passwordTxt, dateTxt;
+    TextView firstNameTxt, lastNameTxt, emailTxt, dateTxt;
     ImageView pictureView;
+
+    StockModel mStockModel;
+
+    private Observer mProfileObserver = new SettingsActivityObserver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +45,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance("https://insvestment-85820-default-rtdb.firebaseio.com/");
+
+        mStockModel = StockModel.GetInstance();
+        mStockModel.Init();
+        mStockModel.register(mProfileObserver);
 
         firstNameTxt = (TextView)findViewById(R.id.firstNameTextView);
         firstNameTxt.setOnClickListener(this);
@@ -47,14 +56,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         lastNameTxt = (TextView)findViewById(R.id.lastNameTextView);
         lastNameTxt.setOnClickListener(this);
 
-        emailTxt = (TextView)findViewById(R.id.lastNameTextView);
+        emailTxt = (TextView)findViewById(R.id.emailTextView);
         emailTxt.setOnClickListener(this);
 
-        passwordTxt = (TextView)findViewById(R.id.passwordTextView);
-        passwordTxt.setOnClickListener(this);
+        dateTxt = (TextView)findViewById(R.id.dateTextView);
+        dateTxt.setOnClickListener(this);
 
         pictureView = (ImageView)findViewById(R.id.imageView);
         pictureView.setOnClickListener(this);
+
+
 
         summaryBtn = (Button)findViewById(R.id.summaryButton);
         summaryBtn.setOnClickListener(this);
@@ -68,42 +79,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         logoutBtn = (Button)findViewById(R.id.logoutButton);
         logoutBtn.setOnClickListener(this);
 
-        if (firebaseAuth.getCurrentUser() != null) {
-            (firebaseDatabase.getReference("user").child(firebaseAuth.getCurrentUser().getUid())).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot)
-                {
-                    UserData user = snapshot.getValue(UserData.class);
-                    if(user!=null)
-                    {
-                        String fname = user.getFirstName();
-                        firstNameTxt.setText(fname);
-
-                        String lname = user.getLastName();
-                        lastNameTxt.setText(lname);
-
-                        String email = user.getEmail();
-                        emailTxt.setText(email);
-
-                        String password = user.getPassword();
-                        passwordTxt.setText(password);
-
-                        String date = user.getDate().getDate() +"/" + (user.getDate().getMonth()+1) + "/" + user.getDate().getYear();
-                        dateTxt.setText(date);
+        mStockModel.GetAllUserData();
 
 
-
-                    }
-                }
-
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-        }
     }
 
     @Override
@@ -127,5 +105,47 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         }
 
+    }
+    public class SettingsActivityObserver implements Observer {
+
+        @Override
+        public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task) {
+
+        }
+
+        @Override
+        public void GetAllStocksInvested(List<Stock> stockInvested) {
+
+        }
+
+        @Override
+        public void GetAllStocksInMarket(List<Stock> stocksList) {
+
+        }
+
+        @Override
+        public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
+
+        }
+
+        @Override
+        public void getALLCash(float cash) {
+
+        }
+
+        @Override
+        public void GetAllUserData(UserData userData) {
+
+            firstNameTxt.setText(userData.getFirstName());
+            lastNameTxt.setText(userData.getLastName());
+            emailTxt.setText(userData.getEmail());
+            Date currentDay = new Date(System.currentTimeMillis());
+            if (userData.getDate() != null)
+            {
+                currentDay = userData.getDate();
+            }
+            String date = currentDay.getDate() +"/" + currentDay.getMonth()+1 + "/" + currentDay.getYear();
+            dateTxt.setText(date);
+        }
     }
 }
