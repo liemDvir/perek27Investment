@@ -2,6 +2,7 @@ package com.example.perek27;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -21,21 +22,40 @@ public class DBManager {
         }
     }
 
-    public void InsertAllStockInMarket(ArrayList<Stock> stocksInMarket){
-        stockDB.beginTransaction();
-        try {
-            for(Stock stock : stocksInMarket){
-                ContentValues values = new ContentValues();
-                values.put(StockDatabaseHelper.COLUMN_NAME, stock.getStockName());
-                values.put(StockDatabaseHelper.COLUMN_SYMBOL, stock.getStockSymbol());
-                long newRowId = stockDB.insert(StockDatabaseHelper.TABLE_NAME, null, values);
-            }
-            stockDB.setTransactionSuccessful();
-        } catch (Exception e) {
+    public ArrayList<Stock> GetAllStocksInMarket(){
 
-        } finally {
-            stockDB.endTransaction(); // End the transaction
-            stockDB.close(); // Close the database
-        }
+        Cursor cursor = stockDB.rawQuery(StockDatabaseHelper.GET_ALL_STOCKS_SQL, null);
+        return dbHelper.GetAllStocksInMarket(cursor);
+    }
+
+    public void DeleteAllDatabase(){
+        stockDB.delete(StockDatabaseHelper.TABLE_NAME,null,null);
+    }
+
+    public void InsertAllStockInMarket(ArrayList<Stock> stocksInMarket){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Code to run on a background thread
+                stockDB.beginTransaction();
+                try {
+                    for(Stock stock : stocksInMarket){
+                        ContentValues values = new ContentValues();
+                        values.put(StockDatabaseHelper.COLUMN_NAME, stock.getStockName());
+                        values.put(StockDatabaseHelper.COLUMN_SYMBOL, stock.getStockSymbol());
+                        long newRowId = stockDB.insert(StockDatabaseHelper.TABLE_NAME, null, values);
+                    }
+                    stockDB.setTransactionSuccessful();
+                } catch (Exception e) {
+
+                } finally {
+                    stockDB.endTransaction(); // End the transaction
+                    //stockDB.close(); // Close the database
+                }
+            }
+        });
+
+        thread.start();  // Start the thread
     }
 }

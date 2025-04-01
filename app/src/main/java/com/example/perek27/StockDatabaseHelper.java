@@ -2,11 +2,13 @@ package com.example.perek27;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 
 public class StockDatabaseHelper extends SQLiteOpenHelper {
 
@@ -27,6 +29,8 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_SYMBOL + " TEXT" +
                     ");";
 
+    public static final String GET_ALL_STOCKS_SQL =
+            "SELECT * FROM " + TABLE_NAME;
     public StockDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -44,4 +48,21 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
+
+    public ArrayList<Stock> GetAllStocksInMarket(Cursor cursor){
+        ArrayList<Stock> stocksInMarket =  new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+                @SuppressLint("Range") String symbol = cursor.getString(cursor.getColumnIndex(COLUMN_SYMBOL));
+
+                stocksInMarket.add(new Stock(name,symbol,0));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return stocksInMarket;
+    }
+
 }
