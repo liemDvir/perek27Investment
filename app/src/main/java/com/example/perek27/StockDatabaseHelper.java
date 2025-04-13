@@ -29,6 +29,11 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_SYMBOL + " TEXT" +
                     ");";
 
+    // SQL query to select values starting with 'df'
+    public static final String GET_STOCK_BY_NAME_SQL =
+            "SELECT * FROM " + TABLE_NAME +
+                    " WHERE " + COLUMN_NAME + " LIKE '";//'df%'";
+
     public static final String GET_ALL_STOCKS_SQL =
             "SELECT * FROM " + TABLE_NAME;
     public StockDatabaseHelper(@Nullable Context context) {
@@ -47,6 +52,21 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
         // Drop the old table and recreate it if database version changes
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+    }
+
+    public ArrayList<Stock> GetStocksByName(Cursor cursor){
+        ArrayList<Stock> stocksList =  new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+                @SuppressLint("Range") String symbol = cursor.getString(cursor.getColumnIndex(COLUMN_SYMBOL));
+
+                stocksList.add(new Stock(name,symbol,0));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return stocksList;
     }
 
     public ArrayList<Stock> GetAllStocksInMarket(Cursor cursor){

@@ -32,6 +32,11 @@ public class DBManager {
         stockDB.delete(StockDatabaseHelper.TABLE_NAME,null,null);
     }
 
+    public ArrayList<Stock> GetStocksByName(String stockName){
+        Cursor cursor = stockDB.rawQuery(StockDatabaseHelper.GET_STOCK_BY_NAME_SQL + stockName + "%'", null);
+        return dbHelper.GetStocksByName(cursor);
+    }
+
     public void InsertAllStockInMarket(ArrayList<Stock> stocksInMarket){
 
         Thread thread = new Thread(new Runnable() {

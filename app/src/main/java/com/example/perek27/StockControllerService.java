@@ -20,13 +20,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,7 +49,6 @@ public class StockControllerService extends Service {
 
     private final String HISTORY_TABLE_NAME = "history";
     private final String STOCK_TABLE_NAME = "stock";
-
     private final String USER_DATA_TABLE_ROW = "user";
     private static FirebaseDatabase mFirebaseDatabase;
     private static FirebaseAuth mFirebaseAuth;
@@ -61,11 +65,15 @@ public class StockControllerService extends Service {
     private final List<Observer> mObservers = Collections.synchronizedList(new ArrayList<Observer>());
     private final IBinder binder = new InteractionService();
 
+    private DBManager stockDBManager = null;
+    
+    private static final String ALPHA_VANTAGE_API_KEY = "2PJN7DA1JVZIZ7G9";
     private static final String ALPHA_VANTAGE_KEY = "QVKNZ7YQGN1U0PTZ";
     private static final String ALPHA_VANTAGE_BASE_URL = "https://www.alphavantage.co/";
 
     private static String ALPHA_VANTAGE_LISTING_URL = "https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=";
 
+    private static String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
     private static final String IEX_API_URL = "https://cloud.iexapis.com/stable/";
 
     private static final String IEX_API_KEY = "https://sandbox.iexapis.com/";
@@ -133,6 +141,75 @@ public class StockControllerService extends Service {
         }
     }
 
+    private void getAllStockInMarketDomainBySymbol(ArrayList<Stock> stocksInMarket){
+
+        Object waitobj = new Object();
+        Map<String, String> stockMap = new HashMap<>();
+        OkHttpClient client = new OkHttpClient();
+        for(Stock stock : stocksInMarket ){
+
+            String symbol = stock.getStockSymbol();
+            String url = "https://finnhub.io/api/v1/stock/profile2?symbol=" + symbol + "&token=" + FINNHUB_API_KEY;
+            Request request = new Request.Builder().url(url).build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    synchronized (waitobj){
+                        waitobj.notify();
+                    }
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String json = response.body().string();
+                    try {
+                        JSONObject obj = new JSONObject(json);
+                        String webUrl = obj.getString("weburl");
+                        String ticker = obj.getString("ticker");
+
+                        // Extract domain
+                        URI uri = new URI(webUrl);
+                        String domain = uri.getHost().replace("www.", ""); // e.g., "apple.com"
+
+                        Log.d("CompanyDomain", "Domain: " + domain);
+
+                        // Optional: Get logo from Clearbit
+                        String logoUrl = "https://logo.clearbit.com/" + domain;
+
+                        stockMap.put(ticker,webUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    synchronized (waitobj){
+                        waitobj.notifyAll();
+                    }
+                }
+            });
+
+            try {
+                synchronized (waitobj){
+                    waitobj.wait(10000);
+                }
+
+            } catch (InterruptedException e) {
+
+            }
+        }
+
+        Log.d("tag", "tag");
+    }
+
+    public void GetStocksByName(String stockName){
+        ArrayList<Stock> stocksList = stockDBManager.GetStocksByName(stockName);
+        synchronized (mObservers){
+            for (final Observer observer : mObservers) {
+                observer.GetAllStocksInMarket(stocksList);
+            }
+        }
+    }
     public void GetTransactionHistory(){
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -180,8 +257,9 @@ public class StockControllerService extends Service {
                 {
                     float amountOfStock = dataSnapshot.child("amountOfStock").getValue(float.class);
                     String typeOfStock = dataSnapshot.child("typeOfStock").getValue(String.class);
+                    String stockSymbol = dataSnapshot.child("stockSymbol").getValue(String.class);
                     Date d = dataSnapshot.child("lastUpdate").getValue(Date.class);
-                    Stock s = new Stock(typeOfStock,amountOfStock);
+                    Stock s = new Stock(typeOfStock, stockSymbol,amountOfStock);
                     stocksStack.add(s);
                 }
 
@@ -244,11 +322,13 @@ public class StockControllerService extends Service {
         synchronized (mObservers){
             mObservers.remove(observer);
         }
-
     }
 
     private void init(){
 
+        if(stockDBManager == null){
+            stockDBManager = new DBManager(this);
+        }
         if(mFirebaseDatabase == null){
             mFirebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
         }
@@ -364,7 +444,65 @@ public class StockControllerService extends Service {
         });
     }
 
+    public void GetStockInfo(String stockSymbol){
+
+        /*"01. symbol": "AAPL",
+        "02. open": "186.1000",
+        "03. high": "199.5400",
+        "04. low": "186.0600",
+        "05. price": "198.1500",
+        "06. volume": "87435915",
+        "07. latest trading day": "2025-04-11",
+        "08. previous close": "190.4200",
+        "09. change": "7.7300",
+        "10. change percent": "4.0594%"*/
+
+        OkHttpClient client = new OkHttpClient();
+
+        String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE"
+                + "&symbol=" + stockSymbol
+                + "&apikey=" + ALPHA_VANTAGE_KEY;
+
+        Request request = new Request.Builder().url(url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try{
+                        String json = response.body().string();
+                        JSONObject obj = new JSONObject(json).getJSONObject("Global Quote");
+
+                        String price = obj.getString("05. price");
+                        String changePercent = obj.getString("10. change percent");
+
+                        System.out.println("Current Price: $" + price);
+                        System.out.println("Change Percent: " + changePercent);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        });
+    }
+
     public void GetAllStocksInMarket(){
+
+        ArrayList<Stock> stocksInMarket = stockDBManager.GetAllStocksInMarket();
+        if(!stocksInMarket.isEmpty()){
+            synchronized (mObservers){
+                for (final Observer observer : mObservers) {
+                    observer.GetAllStocksInMarket(stocksInMarket);
+                }
+            }
+            return;
+        }
+
 
         OkHttpClient client = new OkHttpClient();
 
@@ -404,11 +542,14 @@ public class StockControllerService extends Service {
                             String exchange = tokens[2];
                             String assetType = tokens[3];
 
-                            stocksInMarket.add(new Stock(name,0));
+                            stocksInMarket.add(new Stock(name,symbol,0));
 
                             Log.d("StockSymbol", "Symbol: " + symbol + ", Name: " + name + ", Exchange: " + exchange);
                         }
                     }
+
+                    //getAllStockInMarketDomainBySymbol(stocksInMarket);
+                    stockDBManager.InsertAllStockInMarket(stocksInMarket);
 
                     synchronized (mObservers){
                         for (final Observer observer : mObservers) {
