@@ -478,13 +478,23 @@ public class StockControllerService extends Service {
                         String json = response.body().string();
                         JSONObject obj = new JSONObject(json).getJSONObject("Global Quote");
 
+                        StockInfo stockInf = new StockInfo();
+                        String symbol = obj.getString("01. symbol");
                         String price = obj.getString("05. price");
                         String changePercent = obj.getString("10. change percent");
 
-                        System.out.println("Current Price: $" + price);
-                        System.out.println("Change Percent: " + changePercent);
+                        stockInf.setStockSymbol(symbol);
+                        stockInf.setPrice(Float.valueOf(price));
+                        //stockInf.setChange_percent(Float.valueOf(changePercent));
+                        synchronized (mObservers){
+                            for (final Observer observer : mObservers) {
+                                observer.OnStockInfoUpdate(stockInf);
+                            }
+                        }
+                        /*System.out.println("Current Price: $" + price);
+                        System.out.println("Change Percent: " + changePercent);*/
                     } catch (Exception e) {
-
+                        Log.d("asd", e.getMessage());
                     }
                 }
             }

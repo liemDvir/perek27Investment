@@ -147,5 +147,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             String date = currentDay.getDate() +"/" + currentDay.getMonth()+1 + "/" + currentDay.getYear();
             dateTxt.setText(date);
         }
+
+        @Override
+        public void OnStockInfoUpdate(StockInfo stockInf) {
+
+        }
     }
 }

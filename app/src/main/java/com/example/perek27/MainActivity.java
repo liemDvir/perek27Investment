@@ -132,5 +132,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void GetAllUserData(UserData userData) {
 
         }
+
+        @Override
+        public void OnStockInfoUpdate(StockInfo stockInf) {
+
+        }
     }
 }

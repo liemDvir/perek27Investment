@@ -124,6 +124,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 currentStock = item;
                 Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
                 tmpIntent.putExtra("StockName", currentStock.getStockName());
+                tmpIntent.putExtra("StockSymbol", currentStock.getStockSymbol());
                 startActivity(tmpIntent);
             });
             recyclerView.setAdapter(summaryAdapter);
@@ -136,6 +137,11 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void GetAllUserData(UserData userDate) {
+
+        }
+
+        @Override
+        public void OnStockInfoUpdate(StockInfo stockInf) {
 
         }
     }

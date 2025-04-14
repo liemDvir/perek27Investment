@@ -22,4 +22,6 @@ public interface Observer {
     public void getALLCash(float cash);
 
     public void GetAllUserData(UserData userData);
+
+    public void OnStockInfoUpdate(StockInfo stockInf);
 }
