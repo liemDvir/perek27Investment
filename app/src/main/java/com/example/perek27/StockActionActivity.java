@@ -11,12 +11,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.jjoe64.graphview.GraphView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class StockActionActivity extends AppCompatActivity implements View.OnClickListener {
@@ -25,13 +31,16 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
     DiscoverActivity discoverActivity;
 
     EditText  amountOfStock;
-    TextView typeOfStock;
-    Button buyBtn, sellBtn, goBackBtn;
+    TextView typeOfStockTV,stockSymbolTV,stockCurrentValueTV,stockPrecTV;
+    Button buyBtn, sellBtn, goBackBtn,oneDayBtn,oneWeekBtn,threeMonthsBtn,sixMonthsBtn,oneYearBtn;
+    ArrayList<Stock> currentStockArrList;
     Stock currentStock;
 
     Dialog d;
 
     Button dialogPositiveBtn, dialogNegativeBtn;
+
+    private Observer mStockActionActivityObserver = new StockActionActivityObserver();
 
     GraphView graphView;
     //private Observer mMainActivityObserver = new MainActivity.MainActivityObserver();
@@ -48,18 +57,37 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
         });
         mStockModel = StockModel.GetInstance();
         mStockModel.Init();
-        //mStockModel.register(mMainActivityObserver);
+        mStockModel.register(mStockActionActivityObserver);
 
         Intent intent = getIntent();
+        String stockSymbol = intent.getStringExtra("StockSymbol");
         String stockName = intent.getStringExtra("StockName");
-        currentStock = mStockModel.getStockByName(stockName);
+        mStockModel.GetStockInfo(stockSymbol);
+        //currentStockArrList = mStockModel.GetStocksByName(stockName);
+        /*if (currentStockArrList.isEmpty())
+        {
+            Toast.makeText(StockActionActivity.this, "cannot find the stock", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        currentStock = currentStockArrList.get(currentStockArrList.size()-1);*/
 
         goBackBtn = (Button)findViewById(R.id.goBackXml);
         goBackBtn.setOnClickListener(this);
 
-        typeOfStock = (TextView)findViewById(R.id.typeOfStock);
-        typeOfStock.setOnClickListener(this);
-        typeOfStock.setText(stockName);
+        /*stockSymbolTV = (TextView)findViewById(R.id.stockSymbolTextView);
+        stockSymbolTV.setOnClickListener(this);
+        stockSymbolTV.setText(currentStock.getStockSymbol());*/
+
+        stockCurrentValueTV = (TextView)findViewById(R.id.stockValueTextView);
+        stockCurrentValueTV.setOnClickListener(this);
+        //stockCurrentValueTV.setText();
+
+        stockPrecTV = (TextView)findViewById(R.id.stockPrecTextView);
+        stockPrecTV.setOnClickListener(this);
+
+        typeOfStockTV = (TextView)findViewById(R.id.typeOfStockTextView);
+        typeOfStockTV.setOnClickListener(this);
+        typeOfStockTV.setText(stockName);
 
         amountOfStock = (EditText)findViewById(R.id.amountMoney);
         amountOfStock.setOnClickListener(this);
@@ -100,8 +128,8 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
              if (view == dialogPositiveBtn)
              {
                  d.dismiss();
-                if (!typeOfStock.getText().toString().isEmpty() && 0 < Integer.parseInt(amountOfStock.getText().toString()) && !amountOfStock.getText().toString().isEmpty()) {
-                    String strType = typeOfStock.getText().toString();
+                if (!typeOfStockTV.getText().toString().isEmpty() && 0 < Integer.parseInt(amountOfStock.getText().toString()) && !amountOfStock.getText().toString().isEmpty()) {
+                    String strType = typeOfStockTV.getText().toString();
                     int intAmount = Integer.parseInt(amountOfStock.getText().toString());
                     //TransactionHistory transactionHistory1 = new TransactionHistory(intAmount, strType,true);// means true because buy is positive
                     //StockModel.GetInstance().SetTransaction(transactionHistory1);
@@ -165,5 +193,54 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
         });
         d.show();
         Log.d("createDialog","End createDialog");
+    }
+
+    public class StockActionActivityObserver implements Observer{
+
+        @Override
+        public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task) {
+
+        }
+
+        @Override
+        public void GetAllStocksInvested(List<Stock> stockInvested) {
+
+        }
+
+        @Override
+        public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
+
+        }
+
+        @Override
+        public void GetAllStocksInMarket(List<Stock> stocksList) {
+
+        }
+
+        @Override
+        public void getALLCash(float cash) {
+
+        }
+
+        @Override
+        public void GetAllUserData(UserData userData) {
+
+        }
+
+        @Override
+        public void OnStockInfoUpdate(StockInfo stockInf) {
+            /*if (currentStockArrList.isEmpty())
+            {
+                Toast.makeText(StockActionActivity.this, "cannot find the stock", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            currentStock = currentStockArrList.get(currentStockArrList.size()-1);*/
+            stockSymbolTV = (TextView)findViewById(R.id.stockSymbolTextView);
+            //stockSymbolTV.setOnClickListener(this);
+            stockSymbolTV.setText(stockInf.getStockSymbol());
+            //round number to 2 decimal after dot
+            stockPrecTV.setText(stockInf.getChange_percent());
+            stockCurrentValueTV.setText(String.format("%.2f", stockInf.getPrice()) + " USD");
+        }
     }
 }
