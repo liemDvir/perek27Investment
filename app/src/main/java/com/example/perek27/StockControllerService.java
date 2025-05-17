@@ -485,7 +485,7 @@ public class StockControllerService extends Service {
 
                         stockInf.setStockSymbol(symbol);
                         stockInf.setPrice(Float.valueOf(price));
-                        //stockInf.setChange_percent(Float.valueOf(changePercent));
+                        stockInf.setChange_percent(changePercent);
                         synchronized (mObservers){
                             for (final Observer observer : mObservers) {
                                 observer.OnStockInfoUpdate(stockInf);
