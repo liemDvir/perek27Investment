@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Perek27</string>
+    <string name="search_button_description">Search stock</string>
 </resources>
