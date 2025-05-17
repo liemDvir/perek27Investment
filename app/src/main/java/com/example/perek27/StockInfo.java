@@ -11,7 +11,7 @@ public class StockInfo extends Stock{
     private Date latest_trading_day;
     private float previous_close;
     private float change;
-    private float change_percent;
+    private String change_percent;
 
     public float getOpen() {
         return open;
@@ -69,11 +69,11 @@ public class StockInfo extends Stock{
         this.change = change;
     }
 
-    public float getChange_percent() {
+    public String getChange_percent() {
         return change_percent;
     }
 
-    public void setChange_percent(float change_percent) {
+    public void setChange_percent(String change_percent) {
         this.change_percent = change_percent;
     }
 }
