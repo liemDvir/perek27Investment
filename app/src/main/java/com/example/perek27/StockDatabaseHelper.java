@@ -1,6 +1,7 @@
 package com.example.perek27;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +15,8 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Name and Version
     private static final String DATABASE_NAME = "Stocks.db";
+
+    private SQLiteDatabase stockDB = null;
     private static final int DATABASE_VERSION = 1;
 
     // Table Name and Columns
@@ -54,7 +57,14 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public ArrayList<Stock> GetStocksByName(Cursor cursor){
+    public ArrayList<Stock> GetStocksByName(String stockName){
+
+        if(stockDB == null) {
+            stockDB = this.getWritableDatabase();
+        }
+
+        Cursor cursor = stockDB.rawQuery(StockDatabaseHelper.GET_STOCK_BY_NAME_SQL + stockName + "%'", null);
+
         ArrayList<Stock> stocksList =  new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -69,7 +79,13 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
         return stocksList;
     }
 
-    public ArrayList<Stock> GetAllStocksInMarket(Cursor cursor){
+    public ArrayList<Stock> GetAllStocksInMarket(){
+
+        if(stockDB == null) {
+            stockDB = this.getWritableDatabase();
+        }
+
+        Cursor cursor = stockDB.rawQuery(StockDatabaseHelper.GET_ALL_STOCKS_SQL, null);
         ArrayList<Stock> stocksInMarket =  new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -83,6 +99,37 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
         }
 
         return stocksInMarket;
+    }
+
+    public void InsertAllStockInMarket(ArrayList<Stock> stocksInMarket){
+
+        if(stockDB == null) {
+            stockDB = this.getWritableDatabase();
+        }
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Code to run on a background thread
+                stockDB.beginTransaction();
+                try {
+                    for(Stock stock : stocksInMarket){
+                        ContentValues values = new ContentValues();
+                        values.put(StockDatabaseHelper.COLUMN_NAME, stock.getStockName());
+                        values.put(StockDatabaseHelper.COLUMN_SYMBOL, stock.getStockSymbol());
+                        long newRowId = stockDB.insert(StockDatabaseHelper.TABLE_NAME, null, values);
+                    }
+                    stockDB.setTransactionSuccessful();
+                } catch (Exception e) {
+
+                } finally {
+                    stockDB.endTransaction(); // End the transaction
+                    //stockDB.close(); // Close the database
+                }
+            }
+        });
+
+        thread.start();  // Start the thread
     }
 
 }
