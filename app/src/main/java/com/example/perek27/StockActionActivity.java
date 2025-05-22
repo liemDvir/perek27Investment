@@ -2,6 +2,7 @@ package com.example.perek27;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,28 +63,19 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         String stockSymbol = intent.getStringExtra("StockSymbol");
         String stockName = intent.getStringExtra("StockName");
-        mStockModel.GetStockInfo(stockSymbol);
-        //currentStockArrList = mStockModel.GetStocksByName(stockName);
-        /*if (currentStockArrList.isEmpty())
-        {
-            Toast.makeText(StockActionActivity.this, "cannot find the stock", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        currentStock = currentStockArrList.get(currentStockArrList.size()-1);*/
+
 
         goBackBtn = (Button)findViewById(R.id.goBackXml);
         goBackBtn.setOnClickListener(this);
 
-        /*stockSymbolTV = (TextView)findViewById(R.id.stockSymbolTextView);
-        stockSymbolTV.setOnClickListener(this);
-        stockSymbolTV.setText(currentStock.getStockSymbol());*/
-
         stockCurrentValueTV = (TextView)findViewById(R.id.stockValueTextView);
         stockCurrentValueTV.setOnClickListener(this);
-        //stockCurrentValueTV.setText();
+
+
 
         stockPrecTV = (TextView)findViewById(R.id.stockPrecTextView);
         stockPrecTV.setOnClickListener(this);
+
 
         typeOfStockTV = (TextView)findViewById(R.id.typeOfStockTextView);
         typeOfStockTV.setOnClickListener(this);
@@ -97,6 +89,8 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
 
         sellBtn = (Button)findViewById(R.id.sellButton);
         sellBtn.setOnClickListener(this);
+
+        mStockModel.GetStockInfo(stockSymbol);
 
         graphView = (GraphView)findViewById(R.id.graphViewXml);
         graphView.setOnClickListener(this);
@@ -229,17 +223,31 @@ public class StockActionActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void OnStockInfoUpdate(StockInfo stockInf) {
-            /*if (currentStockArrList.isEmpty())
-            {
-                Toast.makeText(StockActionActivity.this, "cannot find the stock", Toast.LENGTH_LONG).show();
-                finish();
-            }
-            currentStock = currentStockArrList.get(currentStockArrList.size()-1);*/
+
             stockSymbolTV = (TextView)findViewById(R.id.stockSymbolTextView);
+            //stockSymbolTV.setOnClickListener(this)
+            stockSymbolTV.setTextColor(Color.GRAY);
+
+            //currentStock = currentStockArrList.get(currentStockArrList.size()-1);
             //stockSymbolTV.setOnClickListener(this);
-            stockSymbolTV.setText(stockInf.getStockSymbol());
+            stockSymbolTV.setText("(" + stockInf.getStockSymbol()+ ")");
             //round number to 2 decimal after dot
-            stockPrecTV.setText(stockInf.getChange_percent());
+            String currentChangePrecString = stockInf.getChange_percent();
+            currentChangePrecString = currentChangePrecString.substring(0,currentChangePrecString.length()-1);
+            float currentChangePrec =Float.parseFloat(currentChangePrecString);
+            if(currentChangePrec>0)
+            {
+                stockPrecTV.setTextColor(Color.GREEN);
+                stockPrecTV.setText("+"+stockInf.getChange_percent());
+
+            }else if (currentChangePrec<0){
+                stockPrecTV.setTextColor(Color.RED);
+                stockPrecTV.setText(stockInf.getChange_percent());
+            }else {
+                stockPrecTV.setTextColor(Color.WHITE);
+                stockPrecTV.setText(stockInf.getChange_percent());
+            }
+
             stockCurrentValueTV.setText(String.format("%.2f", stockInf.getPrice()) + " USD");
         }
     }

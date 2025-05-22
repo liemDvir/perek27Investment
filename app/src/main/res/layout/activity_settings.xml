@@ -12,9 +12,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="setting"
-        android:textColor="#871919"
-        android:textSize="30dp"
+        android:text="profile"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
         />
 
     <ImageView
@@ -170,19 +172,26 @@
                 />
 
         </TableRow>
-
-
-
     </com.google.android.material.card.MaterialCardView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="more actions:"
+        android:textSize="30dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        />
     <Button
         android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:backgroundTint="#871919"
-        android:text="logout"
-        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:textSize="20sp"
+        android:text="logout                                                         >"
+        android:textColor="@color/white"
         />
 
     <View

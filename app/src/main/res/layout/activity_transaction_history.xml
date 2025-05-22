@@ -11,10 +11,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="stock history"
-        android:textSize="30dp"
-        android:textAlignment="center"
-        android:textColor="#871919"
+        android:text="orders"
+        android:textSize="50dp"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         />
 
     <androidx.recyclerview.widget.RecyclerView
