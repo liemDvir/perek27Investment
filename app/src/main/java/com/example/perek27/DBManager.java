@@ -22,7 +22,7 @@ public class DBManager {
         }*/
     }
 
-    public ArrayList<Stock> GetAllStocksInMarket(){
+    public ArrayList<StockInfo> GetAllStocksInMarket(){
 
         //Cursor cursor = stockDB.rawQuery(StockDatabaseHelper.GET_ALL_STOCKS_SQL, null);
         return dbHelper.GetAllStocksInMarket();
@@ -32,11 +32,11 @@ public class DBManager {
         //stockDB.delete(StockDatabaseHelper.TABLE_NAME,null,null);
     }
 
-    public ArrayList<Stock> GetStocksByName(String stockName){
+    public ArrayList<StockInfo> GetStocksByName(String stockName){
         return dbHelper.GetStocksByName(stockName);
     }
 
-    public void InsertAllStockInMarket(ArrayList<Stock> stocksInMarket){
+    public void InsertAllStockInMarket(ArrayList<StockInfo> stocksInMarket){
 
        dbHelper.InsertAllStockInMarket(stocksInMarket);
     }
