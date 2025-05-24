@@ -4,16 +4,18 @@ public class Stock
 {
 
     private String mStockName;
+    private String mStockSymbol;
     private float mAmountOfStock;
 
     public Stock()
     {
 
     }
-    public Stock(String stockName, float amountOfStock)
+    public Stock(String stockName, String stockSymbol, float amountOfStock)
     {
         mStockName = stockName;
         mAmountOfStock = amountOfStock;
+        mStockSymbol = stockSymbol;
     }
 
 
@@ -27,6 +29,14 @@ public class Stock
 
     public float getAmountOfStock() {
         return mAmountOfStock;
+    }
+
+    public String getStockSymbol() {
+        return mStockSymbol;
+    }
+
+    public void setStockSymbol(String stockSymbol) {
+        this.mStockSymbol = stockSymbol;
     }
 
     public void setAmountOfStock(float amountOfStock) {
