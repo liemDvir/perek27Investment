@@ -22,7 +22,7 @@ public class UserData {
         this.date = newDate;
         this.password = newPassword;
         this.imageView = newImageView;
-        cash = 5000; // כמות התחלתית של כסף
+        cash = 5000; // initial value
     }
 
     public UserData()
