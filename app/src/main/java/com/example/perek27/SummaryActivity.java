@@ -17,11 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class SummaryActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,7 +29,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     Button logout, historyBtn, discoverBtn, settingBtn;
 
     TextView cashAmountOfMoney, sumAllMoney,sumAllMoneyInvested;
-    private Stock currentStock;
+    private StockInfo currentStock;
 
     private Observer mSummayActivityObserver = new MainActivityObserver();
 
@@ -77,9 +74,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mStockModel.GetAllStocksInvested();
-        mStockModel.GetAllCash();
-
+        mStockModel.GetSummaryOfUser();
     }
 
     @Override
@@ -114,14 +109,19 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         @Override
-        public void GetAllStocksInMarket(List<Stock> stocksList) {
+        public void GetAllStocksInMarket(List<StockInfo> stocksList) {
 
         }
 
         @Override
-        public void GetAllStocksInvested(List<Stock> stockInvested) {
+        public void GetAllCash(float cash) {
+            cashAmountOfMoney.setText((String.valueOf(cash)));
+        }
+
+        @Override
+        public void GetAllStocksInvested(List<StockInfo> stockInvested) {
             SummaryAdapter summaryAdapter = new SummaryAdapter(SummaryActivity.this, new ArrayList<>(stockInvested),item -> {
-                currentStock = item;
+                currentStock = (StockInfo) item;
                 Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
                 tmpIntent.putExtra("StockName", currentStock.getStockName());
                 tmpIntent.putExtra("StockSymbol", currentStock.getStockSymbol());
@@ -131,18 +131,13 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         @Override
-        public void getALLCash(float cash) {
-            cashAmountOfMoney.setText((String.valueOf(cash)));
-        }
-
-        @Override
         public void GetAllUserData(UserData userDate) {
 
         }
 
         @Override
         public void OnStockInfoUpdate(StockInfo stockInf) {
-
+            //TODO - update stock
         }
     }
 }
