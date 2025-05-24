@@ -27,7 +27,7 @@ public class StockModel extends Application {
     private static StockModel mStockModel;
     private List<Observer> mObservers = Collections.synchronizedList(new ArrayList<Observer>());
 
-    private List<Stock> mStocksInvestedList =  Collections.synchronizedList(new ArrayList<Stock>());
+    private List<StockInfo> mStocksInvestedList =  Collections.synchronizedList(new ArrayList<StockInfo>());
     private final Observer mModelObserver = new ModelObserver();
     public static StockModel GetInstance(){
         if(mStockModel == null){
@@ -96,6 +96,11 @@ public class StockModel extends Application {
         mStockControllerService.GetAllStocksInvested();
     }
 
+    public void GetSummaryOfUser(){
+        GetAllStocksInvested();
+        GetAllCash();
+    }
+
     public void GetTransactionHistory(){
         if(mStockControllerService == null)
             return;
@@ -152,7 +157,12 @@ public class StockModel extends Application {
         if(mStockControllerService == null)
             return ;
 
-        mStockControllerService.getALLCash();
+        if(mUserData == null){
+            mStockControllerService.GetAllCash();
+            return;
+        }
+
+        mModelObserver.GetAllCash(mUserData.getCash());
     }
     public void BuyStock(Stock stock, float amountMoneyToBuy)
     {
@@ -193,7 +203,7 @@ public class StockModel extends Application {
 
         return series;
     }
-    public Stock getStockByName(String stockName)
+    public Stock GetStock(String stockName)
     {
         /*ArrayList<Stock> stockArrayList = GetAllStocksInMarket();
         Stock curentStock;
@@ -207,8 +217,24 @@ public class StockModel extends Application {
             }
             index++;
         }*/
-        return new Stock("AAPL", 0);
+        return new Stock("Apple inc","AAPL", 0);
+    }
 
+    public ArrayList<Stock> GetStocksByName(String stockName){
+        ArrayList<Stock> stockList = new ArrayList<>();
+        if(mStockControllerService == null)
+            return null;
+
+        mStockControllerService.GetStocksByName(stockName);
+
+        return stockList;
+    }
+
+    public void GetStockInfo(String stockSymbol){
+        if(mStockControllerService == null)
+            return;
+
+        mStockControllerService.GetStockInfo(stockSymbol);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -246,10 +272,19 @@ public class StockModel extends Application {
         }
 
         @Override
-        public void GetAllStocksInMarket(List<Stock> stocksList) {
+        public void GetAllStocksInMarket(List<StockInfo> stocksList) {
             synchronized (mObservers){
                 for (final Observer observer : mObservers) {
                     observer.GetAllStocksInMarket(stocksList);
+                }
+            }
+        }
+
+        @Override
+        public void GetAllCash(float cash) {
+            synchronized (mObservers){
+                for (final Observer observer : mObservers) {
+                    observer.GetAllCash(cash);
                 }
             }
         }
@@ -260,7 +295,7 @@ public class StockModel extends Application {
         }
 
         @Override
-        public void GetAllStocksInvested(List<Stock> stockInvested) {
+        public void GetAllStocksInvested(List<StockInfo> stockInvested) {
             synchronized (mStocksInvestedList){
                 if(!mStocksInvestedList.isEmpty()){
                     mStocksInvestedList.clear();
@@ -272,14 +307,10 @@ public class StockModel extends Application {
                     observer.GetAllStocksInvested(stockInvested);
                 }
             }
-        }
 
-        @Override
-        public void getALLCash(float cash) {
-            synchronized (mObservers){
-                for (final Observer observer : mObservers) {
-                    observer.getALLCash(cash);
-                }
+            //GetStocksValue
+            for(StockInfo stockInf : mStocksInvestedList){
+                mStockControllerService.GetStockInfo(stockInf.getStockSymbol());
             }
         }
 
@@ -288,6 +319,7 @@ public class StockModel extends Application {
             if(mUserData == null){
                 mUserData = userDate;
             }
+
             synchronized (mObservers){
                 for (final Observer observer : mObservers) {
                     observer.GetAllUserData(userDate);
@@ -295,6 +327,22 @@ public class StockModel extends Application {
             }
 
         }
+        @Override
+        public void OnStockInfoUpdate(StockInfo stockInf) {
+            synchronized (mStocksInvestedList){
+                for(StockInfo stockInfFromList : mStocksInvestedList){
+                    if(stockInfFromList.getStockSymbol().equals(stockInf.getStockSymbol())){
+                        stockInfFromList.setPrice(stockInf.getPrice());
+                        stockInfFromList.setChange_percent(stockInf.getChange_percent());
+                    }
+                }
+            }
 
+            synchronized (mObservers){
+                for (final Observer observer : mObservers) {
+                    observer.OnStockInfoUpdate(stockInf);
+                }
+            }
+        }
     }
 }
