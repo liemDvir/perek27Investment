@@ -13,6 +13,15 @@ public class StockInfo extends Stock{
     private float change;
     private String change_percent;
 
+    public StockInfo(String stockName, String stockSymbol, float amountOfStock)
+    {
+        super(stockName, stockSymbol, amountOfStock);
+    }
+
+    public StockInfo()
+    {
+
+    }
     public float getOpen() {
         return open;
     }
