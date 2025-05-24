@@ -55,12 +55,7 @@ public class StockControllerService extends Service {
 
     private static String mUID;
 
-    private  float currentCash;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String imageView;
-    private Date userDate;
+    private UserData currentUserData = null;
 
     private final List<Observer> mObservers = Collections.synchronizedList(new ArrayList<Observer>());
     private final IBinder binder = new InteractionService();
@@ -203,7 +198,7 @@ public class StockControllerService extends Service {
     }
 
     public void GetStocksByName(String stockName){
-        ArrayList<Stock> stocksList = stockDBManager.GetStocksByName(stockName);
+        ArrayList<StockInfo> stocksList = stockDBManager.GetStocksByName(stockName);
         synchronized (mObservers){
             for (final Observer observer : mObservers) {
                 observer.GetAllStocksInMarket(stocksList);
@@ -252,14 +247,14 @@ public class StockControllerService extends Service {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.d("onDataChange", snapshot.toString());
                 //transactionHistoryArr = new ArrayList<>();
-                ArrayList<Stock> stocksStack =  new ArrayList<>();
+                ArrayList<StockInfo> stocksStack =  new ArrayList<>();
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
                     float amountOfStock = dataSnapshot.child("amountOfStock").getValue(float.class);
-                    String typeOfStock = dataSnapshot.child("typeOfStock").getValue(String.class);
+                    //String typeOfStock = dataSnapshot.child("typeOfStock").getValue(String.class);
                     String stockSymbol = dataSnapshot.child("stockSymbol").getValue(String.class);
-                    Date d = dataSnapshot.child("lastUpdate").getValue(Date.class);
-                    Stock s = new Stock(typeOfStock, stockSymbol,amountOfStock);
+                    //Date d = dataSnapshot.child("lastUpdate").getValue(Date.class);
+                    StockInfo s = new StockInfo("", stockSymbol,amountOfStock);
                     stocksStack.add(s);
                 }
 
@@ -365,18 +360,33 @@ public class StockControllerService extends Service {
         });
 
     }
-    public void getALLCash()
+
+    public void GetAllCash()
     {
         Log.d(STOCK_CONTROLLER_SERVICE_NAME,"start getAllCash");
+        if(currentUserData != null){
+            synchronized (mObservers){
+                for (final Observer observer : mObservers) {
+                    observer.GetAllCash(currentUserData.getCash());
+                }
+            }
+            return;
+        }
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.getReference(USER_DATA_TABLE_ROW).child(mUID).addValueEventListener(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserData currentUser = snapshot.getValue(UserData.class);
-                if (currentUser!= null)
+                currentUserData = snapshot.getValue(UserData.class);
+                if (currentUserData!= null)
                 {
-                    currentCash = currentUser.getCash();
+                    synchronized (mObservers){
+                        for (final Observer observer : mObservers) {
+                            observer.GetAllCash(currentUserData.getCash());
+                        }
+                    }
+                    Log.d("onDataChange", "ended get all cash");
                 }
             }
 
@@ -384,35 +394,28 @@ public class StockControllerService extends Service {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
         });
-        synchronized (mObservers){
-            for (final Observer observer : mObservers) {
-                observer.getALLCash(currentCash);
-            }
-        }
-        Log.d("onDataChange", "ended get all cash");
-
-
-
     }
 
     public void GetAllUserData()
     {
-        Log.d("onDataChange","start get all user data");
+        Log.d("GetAllUserData()","start get all user data");
+        if(currentUserData != null){
+            synchronized (mObservers){
+                for (final Observer observer : mObservers) {
+                    observer.GetAllUserData(currentUserData);
+                }
+            }
+            return;
+        }
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.getReference(USER_DATA_TABLE_ROW).child(mFirebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserData currentUserData = snapshot.getValue(UserData.class);
+                currentUserData = snapshot.getValue(UserData.class);
                 if (currentUserData != null)
                 {
-                    /*firstName= currentUserData.getFirstName();
-                    lastName = currentUserData.getLastName();
-                    email = currentUserData.getEmail();
-                    imageView = currentUserData.getImageView();
-                    userDate = currentUserData.getDate();*/
-
                     synchronized (mObservers){
                         for (final Observer observer : mObservers) {
                             observer.GetAllUserData(currentUserData);
@@ -457,6 +460,10 @@ public class StockControllerService extends Service {
         "09. change": "7.7300",
         "10. change percent": "4.0594%"*/
 
+        if(stockSymbol == null){
+            Log.e(STOCK_CONTROLLER_SERVICE_NAME, "GetStockInfo() - stockSymbol == null");
+            return;
+        }
         OkHttpClient client = new OkHttpClient();
 
         String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE"
@@ -494,7 +501,7 @@ public class StockControllerService extends Service {
                         /*System.out.println("Current Price: $" + price);
                         System.out.println("Change Percent: " + changePercent);*/
                     } catch (Exception e) {
-                        Log.d("asd", e.getMessage());
+                        Log.d("Log", e.getMessage());
                     }
                 }
             }
@@ -503,7 +510,7 @@ public class StockControllerService extends Service {
 
     public void GetAllStocksInMarket(){
 
-        ArrayList<Stock> stocksInMarket = stockDBManager.GetAllStocksInMarket();
+        ArrayList<StockInfo> stocksInMarket = stockDBManager.GetAllStocksInMarket();
         if(!stocksInMarket.isEmpty()){
             synchronized (mObservers){
                 for (final Observer observer : mObservers) {
@@ -537,7 +544,7 @@ public class StockControllerService extends Service {
                     String line;
                     boolean isFirstLine = true;
 
-                    ArrayList<Stock> stocksInMarket =  new ArrayList<>();
+                    ArrayList<StockInfo> stocksInMarket =  new ArrayList<>();
 
                     while ((line = reader.readLine()) != null) {
                         if (isFirstLine) {
@@ -552,7 +559,7 @@ public class StockControllerService extends Service {
                             String exchange = tokens[2];
                             String assetType = tokens[3];
 
-                            stocksInMarket.add(new Stock(name,symbol,0));
+                            stocksInMarket.add(new StockInfo(name,symbol,0));
 
                             Log.d("StockSymbol", "Symbol: " + symbol + ", Name: " + name + ", Exchange: " + exchange);
                         }
