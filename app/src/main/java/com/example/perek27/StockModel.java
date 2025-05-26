@@ -27,8 +27,12 @@ public class StockModel extends Application {
     private static StockModel mStockModel;
     private List<Observer> mObservers = Collections.synchronizedList(new ArrayList<Observer>());
 
+    private final Object lockObject = new Object();
+
     private List<StockInfo> mStocksInvestedList =  Collections.synchronizedList(new ArrayList<StockInfo>());
     private final Observer mModelObserver = new ModelObserver();
+
+    private Boolean bUpdateCashSuccess = true;
     public static StockModel GetInstance(){
         if(mStockModel == null){
             mStockModel = new StockModel();
@@ -52,7 +56,7 @@ public class StockModel extends Application {
 
     public void register(final Observer observer) {
 
-        synchronized (mObservers){
+        synchronized (lockObject){
             if (!mObservers.contains(observer)) {
                 mObservers.add(observer);
             }
@@ -61,7 +65,7 @@ public class StockModel extends Application {
 
     public void unregister(final Observer observer) {
         //mStockControllerService.unregister(observer);
-        synchronized (mObservers){
+        synchronized (lockObject){
             if (!mObservers.contains(observer)) {
                 mObservers.remove(observer);
             }
@@ -84,7 +88,7 @@ public class StockModel extends Application {
 
     public void GetAllStocksInvested()
     {
-        synchronized (mStocksInvestedList){
+        synchronized (lockObject){
             if(!mStocksInvestedList.isEmpty()){
                 mModelObserver.GetAllStocksInvested(mStocksInvestedList);
             }
@@ -164,16 +168,51 @@ public class StockModel extends Application {
 
         mModelObserver.GetAllCash(mUserData.getCash());
     }
-    public void BuyStock(Stock stock, float amountMoneyToBuy)
+    public void BuyStock(String stockSymbol, float amountOfMoneyToBuy)
     {
         if(mStockControllerService == null)
             return ;
 
-        //mStockControllerService.SetTransaction();
+        if(mUserData.getCash() < amountOfMoneyToBuy){
+            Log.e("BuyStock()", "Not enough money");
+            mModelObserver.OnBuyStockCompleted(false, "Not enough money");
+            return;
+        }
+
+        //Update stock value
+        GetStockInfo(stockSymbol);
+        synchronized (lockObject){
+            try {
+                lockObject.wait(10000);
+            } catch (InterruptedException e) {
+                mModelObserver.OnBuyStockCompleted(false, "Timeout");
+                return;
+            }
+        }
+
+        //Update cash on datebase
+        mStockControllerService.UpdateCash(mUserData.getCash() - amountOfMoneyToBuy);
+        synchronized (lockObject){
+            try {
+                lockObject.wait(10000);
+            } catch (InterruptedException e) {
+                mModelObserver.OnBuyStockCompleted(false, "update");
+                return;
+            }
+        }
+
+        //Update transaction history
+        //TODO
+
+        //Update cash
+        //TODO
+
+        //Update stocks invested
+        //TODO
 
     }
 
-    public void SellStock(Stock stock)
+    public void SellStock(String stockSymbol, float amountOfMoneyToSell)
     {
 
 
@@ -202,22 +241,6 @@ public class StockModel extends Application {
 
 
         return series;
-    }
-    public Stock GetStock(String stockName)
-    {
-        /*ArrayList<Stock> stockArrayList = GetAllStocksInMarket();
-        Stock curentStock;
-        int index = 0;
-        while(!stockArrayList.isEmpty())
-        {
-            curentStock = stockArrayList.get(index);
-            if (curentStock.getStockName().equals(stockName))
-            {
-                return curentStock;
-            }
-            index++;
-        }*/
-        return new Stock("Apple inc","AAPL", 0);
     }
 
     public ArrayList<Stock> GetStocksByName(String stockName){
@@ -264,7 +287,7 @@ public class StockModel extends Application {
 
         @Override
         public void SignInWithEmailAndPasswordCompleate(@NonNull Task<AuthResult> task) {
-            synchronized (mObservers){
+            synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.SignInWithEmailAndPasswordCompleate(task);
                 }
@@ -273,7 +296,7 @@ public class StockModel extends Application {
 
         @Override
         public void GetAllStocksInMarket(List<StockInfo> stocksList) {
-            synchronized (mObservers){
+            synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.GetAllStocksInMarket(stocksList);
                 }
@@ -282,7 +305,7 @@ public class StockModel extends Application {
 
         @Override
         public void GetAllCash(float cash) {
-            synchronized (mObservers){
+            synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.GetAllCash(cash);
                 }
@@ -302,7 +325,7 @@ public class StockModel extends Application {
                 }
                 mStocksInvestedList.addAll(stockInvested);
             }
-            synchronized (mObservers){
+            synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.GetAllStocksInvested(stockInvested);
                 }
@@ -320,7 +343,7 @@ public class StockModel extends Application {
                 mUserData = userDate;
             }
 
-            synchronized (mObservers){
+            synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.GetAllUserData(userDate);
                 }
@@ -338,9 +361,20 @@ public class StockModel extends Application {
                 }
             }
 
-            synchronized (mObservers){
+            synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.OnStockInfoUpdate(stockInf);
+                }
+
+                lockObject.notifyAll();
+            }
+        }
+
+        @Override
+        public void OnBuyStockCompleted(Boolean success, String reason) {
+            synchronized (lockObject){
+                for (final Observer observer : mObservers) {
+                    observer.OnBuyStockCompleted(success,reason);
                 }
             }
         }
