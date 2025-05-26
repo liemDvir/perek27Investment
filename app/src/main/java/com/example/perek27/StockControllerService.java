@@ -361,6 +361,18 @@ public class StockControllerService extends Service {
 
     }
 
+    public void UpdateCash(float newValue){
+        Log.d(STOCK_CONTROLLER_SERVICE_NAME,"start getAllCash");
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference(USER_DATA_TABLE_ROW).child(mUID).child("cash").setValue(newValue).addOnCompleteListener(task -> {
+            synchronized (mObservers){
+                for (final Observer observer : mObservers) {
+                    observer.OnUpdateCashCompleted(task.isSuccessful());
+                }
+            }
+        });
+    }
     public void GetAllCash()
     {
         Log.d(STOCK_CONTROLLER_SERVICE_NAME,"start getAllCash");
@@ -483,12 +495,16 @@ public class StockControllerService extends Service {
                 if (response.isSuccessful() && response.body() != null) {
                     try{
                         String json = response.body().string();
-                        JSONObject obj = new JSONObject(json).getJSONObject("Global Quote");
+                        //JSONObject obj = new JSONObject(json).getJSONObject("Global Quote");
 
                         StockInfo stockInf = new StockInfo();
-                        String symbol = obj.getString("01. symbol");
+                        /*String symbol = obj.getString("01. symbol");
                         String price = obj.getString("05. price");
-                        String changePercent = obj.getString("10. change percent");
+                        String changePercent = obj.getString("10. change percent");*/
+
+                        String symbol = stockSymbol;
+                        String price = "198.1500";
+                        String changePercent = "4.0594%";
 
                         stockInf.setStockSymbol(symbol);
                         stockInf.setPrice(Float.valueOf(price));
