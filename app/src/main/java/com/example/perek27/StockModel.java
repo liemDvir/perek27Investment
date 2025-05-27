@@ -378,5 +378,10 @@ public class StockModel extends Application {
                 }
             }
         }
+
+        @Override
+        public void OnUpdateCashCompleted(Boolean success) {
+
+        }
     }
 }

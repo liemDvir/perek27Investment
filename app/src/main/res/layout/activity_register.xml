@@ -16,7 +16,7 @@
         android:text="investment"
         android:textSize="30dp"
         android:textAlignment="center"
-        android:textColor= "#871919"
+        android:textColor= "#4CAF50"
 
 
         />
@@ -76,7 +76,7 @@
         android:id="@+id/dateOfBirth"
         android:textSize="30dp"
         android:layout_margin="10dp"
-        android:backgroundTint="#B12020"
+        android:backgroundTint="#4CAF50"
         />
     <Button
         android:layout_width="match_parent"
@@ -85,7 +85,7 @@
         android:id="@+id/takePicture"
         android:textSize="30dp"
         android:layout_margin="10dp"
-        android:backgroundTint="#B12020"
+        android:backgroundTint="#4CAF50"
         />
     <ImageView
         android:layout_width="40dp"
@@ -100,7 +100,7 @@
         android:id="@+id/registerBtn"
         android:textSize="30dp"
         android:layout_margin="10dp"
-        android:backgroundTint="#B12020"
+        android:backgroundTint="#4CAF50"
         />
 
 </LinearLayout>

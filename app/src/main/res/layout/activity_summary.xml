@@ -103,10 +103,9 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/recycleSummary"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="330dp" />
 
     <View
         android:layout_width="match_parent"
@@ -117,13 +116,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:background="#871919"
+        android:background="#4CAF50"
         >
         <Button
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="summay"
-            android:backgroundTint="#892626"
+            android:text="summary"
+            android:backgroundTint="#69D06C"
             android:textColor="@color/white"
             android:id="@+id/summaryButton"
 
@@ -133,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="discover"
-            android:backgroundTint="#871919"
+            android:backgroundTint="#4CAF50"
             android:id="@+id/discoverButton"
             />
         <Button
@@ -142,14 +141,14 @@
             android:textAlignment="center"
             android:text="History"
             android:layout_gravity="center"
-            android:backgroundTint="#871919"
+            android:backgroundTint="#4CAF50"
             android:id="@+id/historyButton"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="profile"
-            android:backgroundTint="#871919"
+            android:backgroundTint="#4CAF50"
             android:id="@+id/settingButton"
             />
     </TableRow>

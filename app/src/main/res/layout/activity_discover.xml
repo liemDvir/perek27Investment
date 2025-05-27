@@ -13,12 +13,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Discover"
-        android:textColor="#871919"
+        android:textColor="@color/white"
         android:textSize="30dp"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
         />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       >
+        <EditText
+        android:layout_width="310dp"
+        android:layout_height="50dp"
+        android:hint="search for stock"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:id="@+id/searchEditText"
+        android:textStyle="bold"
+            />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:background="@drawable/search"
+            android:id="@+id/searchButton"
+            android:contentDescription="@string/search_button_description" />
+            />
+
+    </TableRow>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="560dp"
         android:id="@+id/recycleDiscover"
     />
     <View
@@ -30,13 +56,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:background="#871919"
+        android:background="#4CAF50"
         >
         <Button
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="summay"
-            android:backgroundTint="#871919"
+            android:text="summary"
+            android:backgroundTint="#4CAF50"
             android:textColor="@color/white"
             android:id="@+id/summaryButton"
 
@@ -47,8 +73,7 @@
             android:layout_height="wrap_content"
             android:text="discover"
             android:id="@+id/discoverButton"
-
-            android:backgroundTint="#892626"
+            android:backgroundTint="#69D06C"
             />
         <Button
             android:layout_width="wrap_content"
@@ -57,13 +82,13 @@
             android:text="History"
             android:layout_gravity="center"
             android:id="@+id/historyButton"
-            android:backgroundTint="#871919"
+            android:backgroundTint="#4CAF50"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="profile"
-            android:backgroundTint="#871919"
+            android:backgroundTint="#4CAF50"
             android:id="@+id/settingButton"
             />
 

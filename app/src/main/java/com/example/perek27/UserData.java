@@ -72,22 +72,6 @@ public class UserData {
         byte[] bytes = byteArrayOutputStream.toByteArray();
         this.imageView = Base64.encodeToString(bytes, Base64.DEFAULT);
     }
-    public  void addCah(int i)
-    {
-        cash += i;
-    }
-    public boolean removeCash(int i) // returns boolean variable
-    {
-        if(i > cash)
-        {
-            return false;
-        }
-        else
-        {
-           cash =- i;
-           return true;
-        }
-    }
 
     public float getCash() {
         return cash;
