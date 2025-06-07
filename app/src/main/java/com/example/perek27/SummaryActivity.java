@@ -193,6 +193,11 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         @Override
+        public void OnSellStockCompleted(Boolean seccess, String reason) {
+
+        }
+
+        @Override
         public void OnUpdateCashCompleted(Boolean success) {
 
         }

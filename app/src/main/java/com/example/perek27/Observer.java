@@ -26,5 +26,7 @@ public interface Observer {
 
     public void OnBuyStockCompleted(Boolean success, String reason);
 
+    public void OnSellStockCompleted(Boolean seccess, String reason);
+
     public void OnUpdateCashCompleted(Boolean success);
 }

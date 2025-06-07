@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.perek27"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -60,6 +60,8 @@ dependencies {
     //implementation("com.android.support:support-compat:27.1.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-ktx:1.13.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    //implementation("com.google.android.gms:play-services-base:18.4.0")
 
     implementation("com.jjoe64:graphview:4.2.2") {
         exclude(group = "com.android.support")
