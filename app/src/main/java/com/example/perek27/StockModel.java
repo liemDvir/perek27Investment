@@ -391,7 +391,7 @@ public class StockModel extends Application {
                 }
 
                 //Update transaction
-                amoutOfStockToSell = (amoutOfStockToSell * (-1));
+                //amoutOfStockToSell = (amoutOfStockToSell * (-1));
                 SetTransaction(new Transaction((int)amoutOfStockToSell,stockToSell.getStockSymbol(),amountOfMoneyToSell, Date.from(Instant.now())));
 
                 synchronized (lockObject){
@@ -402,7 +402,6 @@ public class StockModel extends Application {
         });
 
         thread.start();
-
     }
     public LineGraphSeries<DataPoint> GetCurrentStockGraphViewSeries(Stock stock)
     {
