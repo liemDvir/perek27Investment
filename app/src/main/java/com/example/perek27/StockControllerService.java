@@ -26,12 +26,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -63,11 +69,15 @@ public class StockControllerService extends Service {
     private DBManager stockDBManager = null;
     
     private static final String ALPHA_VANTAGE_API_KEY = "2PJN7DA1JVZIZ7G9";
-    private static final String ALPHA_VANTAGE_KEY = "QVKNZ7YQGN1U0PTZ";
+
+    //private static final String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
+    private static final String ALPHA_VANTAGE_KEY = "202VJPX1LEX8M4MA";//"QVKNZ7YQGN1U0PTZ";
     private static final String ALPHA_VANTAGE_BASE_URL = "https://www.alphavantage.co/";
 
     private static String ALPHA_VANTAGE_LISTING_URL = "https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=";
 
+    private static String FINNHUB_LISTING_URL = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=";
+    private OkHttpClient mOkHttpClient = new OkHttpClient();
     private static String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
     private static final String IEX_API_URL = "https://cloud.iexapis.com/stable/";
 
@@ -218,7 +228,7 @@ public class StockControllerService extends Service {
                     float amountOfStock = dataSnapshot.child("amountOfStock").getValue(float.class);
                     int moneyInvested = dataSnapshot.child("moneyInvested").getValue(int.class);
                     String stockName = dataSnapshot.child("stockName").getValue(String.class);
-                    Date d = dataSnapshot.child("lastUpdate").getValue(Date.class);
+                    Date d = dataSnapshot.child("transactionTime").getValue(Date.class);
                     Transaction t = new Transaction(moneyInvested,stockName,amountOfStock,d);
                     transactionList.add(t);
                 }
@@ -238,8 +248,41 @@ public class StockControllerService extends Service {
         });
     }
 
-    public void GetAllStocksInvested(){
+    public void AddNewStockInvested(StockInfo stock){
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference objRef = mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID);
+        String stockId = objRef.push().getKey();
+        stock.setStockID(stockId);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("amountOfStock", stock.getAmountOfStock());
+        updates.put("stockSymbol", stock.getStockSymbol());
 
+        //mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID).child(stock.getStockID()).updateChildren(updates,);
+
+        mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID).child(stock.getStockID()).updateChildren(updates,new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Log.d(STOCK_CONTROLLER_SERVICE_NAME,"AddNewStockInvested complete");
+            }
+        });
+        //UpdateAmountOfStockInvested(stock);
+    }
+
+    public void UpdateAmountOfStockInvested(StockInfo stock){
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        String id = stock.getStockID();
+        mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID).child(stock.getStockID()).child("amountOfStock").setValue(stock.getAmountOfStock(),new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error != null) {
+                    Log.e("FIREBASE", "Failed to set value: " + error.getMessage());
+                } else {
+                    Log.d("FIREBASE", "Value set successfully " );
+                }
+            }
+        });
+    }
+    public void GetAllStocksInvested(){
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID).addValueEventListener(new ValueEventListener() {
@@ -250,11 +293,12 @@ public class StockControllerService extends Service {
                 ArrayList<StockInfo> stocksStack =  new ArrayList<>();
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
+                    String stockID = dataSnapshot.getKey();
                     float amountOfStock = dataSnapshot.child("amountOfStock").getValue(float.class);
                     //String typeOfStock = dataSnapshot.child("typeOfStock").getValue(String.class);
                     String stockSymbol = dataSnapshot.child("stockSymbol").getValue(String.class);
                     //Date d = dataSnapshot.child("lastUpdate").getValue(Date.class);
-                    StockInfo s = new StockInfo("", stockSymbol,amountOfStock);
+                    StockInfo s = new StockInfo("", stockSymbol,amountOfStock, stockID);
                     stocksStack.add(s);
                 }
 
@@ -337,6 +381,36 @@ public class StockControllerService extends Service {
         //IexApi api = mRetrofit.create(IexApi.class);
 
         //GetAllStocksInMarket();
+
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+                    @Override
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+                    @Override
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[]{}; }
+                }
+        };
+
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(STOCK_CONTROLLER_SERVICE_NAME, e.getMessage());
+        }
+        try {
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        } catch (KeyManagementException e) {
+            Log.e(STOCK_CONTROLLER_SERVICE_NAME, e.getMessage());
+        }
+
+        mOkHttpClient = new OkHttpClient.Builder()
+                .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                .hostnameVerifier((hostname, session) -> true)
+                .build();
+
+
     }
 
     public void SignInWithEmailAndPassword(String email, String password){
@@ -356,6 +430,15 @@ public class StockControllerService extends Service {
                     }
                 }
             }
+
+        });
+
+    }
+
+    public void UpdateStocksInvested(Stock stock){
+        Log.d(STOCK_CONTROLLER_SERVICE_NAME,"start UpdateStocksInvested");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference(STOCK_TABLE_NAME).child(mUID).child(stock.getStockID()).setValue(stock.getAmountOfStock()).addOnCompleteListener(task -> {
 
         });
 
@@ -452,9 +535,9 @@ public class StockControllerService extends Service {
         String transID = transRef.push().getKey();
         transRef.child(transID).setValue(transaction).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d("Asd","asd");
+                Log.d(STOCK_CONTROLLER_SERVICE_NAME,"SetTransaction() - successful");
             } else {
-                Log.d("Asd","asd");
+                Log.d(STOCK_CONTROLLER_SERVICE_NAME,"SetTransaction() - failed");
             }
         });
     }
@@ -472,22 +555,36 @@ public class StockControllerService extends Service {
         "09. change": "7.7300",
         "10. change percent": "4.0594%"*/
 
+        //{"c":697.71,"d":13.09,"dp":1.912,"h":702.806,"l":691.87,"o":696.17,"pc":684.62,"t":1749240000}
+
+        Log.d(STOCK_CONTROLLER_SERVICE_NAME, "GetStockInfo");
+
         if(stockSymbol == null){
             Log.e(STOCK_CONTROLLER_SERVICE_NAME, "GetStockInfo() - stockSymbol == null");
             return;
         }
-        OkHttpClient client = new OkHttpClient();
+        //OkHttpClient client = new OkHttpClient();
 
-        String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE"
+        /*String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE"
                 + "&symbol=" + stockSymbol
-                + "&apikey=" + ALPHA_VANTAGE_KEY;
+                + "&apikey=" + ALPHA_VANTAGE_API_KEY;*/
+
+        String url = "https://finnhub.io/api/v1/quote?symbol="
+                + stockSymbol
+                + "&token=" + FINNHUB_API_KEY;
 
         Request request = new Request.Builder().url(url).build();
 
-        client.newCall(request).enqueue(new Callback() {
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Log.e(STOCK_CONTROLLER_SERVICE_NAME, "GetStockInfo() - " + e.getMessage());
+                //Notify Observers
+                synchronized (mObservers){
+                    for (final Observer observer : mObservers) {
+                        observer.OnStockInfoUpdate(null);
+                    }
+                }
             }
 
             @Override
@@ -496,19 +593,33 @@ public class StockControllerService extends Service {
                     try{
                         String json = response.body().string();
                         //JSONObject obj = new JSONObject(json).getJSONObject("Global Quote");
+                        JSONObject obj = new JSONObject(json);
 
                         StockInfo stockInf = new StockInfo();
                         /*String symbol = obj.getString("01. symbol");
                         String price = obj.getString("05. price");
-                        String changePercent = obj.getString("10. change percent");*/
-
+                        String changePercent = obj.getString("10. change percent");
+*/
                         String symbol = stockSymbol;
+                        double price = obj.getDouble("c");
+                        String changePercent = obj.getString("dp");
+
+                        /*String symbol = stockSymbol;
                         String price = "198.1500";
-                        String changePercent = "4.0594%";
+                        String changePercent = "4.0594%";*/
 
                         stockInf.setStockSymbol(symbol);
-                        stockInf.setPrice(Float.valueOf(price));
+                        stockInf.setPrice((float)price);
                         stockInf.setChange_percent(changePercent);
+
+                        //Update Database
+                        stockDBManager.UpdateStockInfo(stockInf);
+                        String stockName = stockDBManager.GetStocksBySymbol(symbol).getStockName();
+                        if(stockName != null){
+                            stockInf.setStockName(stockName);
+                        }
+
+                        //Notify Observers
                         synchronized (mObservers){
                             for (final Observer observer : mObservers) {
                                 observer.OnStockInfoUpdate(stockInf);
@@ -518,6 +629,12 @@ public class StockControllerService extends Service {
                         System.out.println("Change Percent: " + changePercent);*/
                     } catch (Exception e) {
                         Log.d("Log", e.getMessage());
+                        //Notify Observers
+                        synchronized (mObservers){
+                            for (final Observer observer : mObservers) {
+                                observer.OnStockInfoUpdate(null);
+                            }
+                        }
                     }
                 }
             }
@@ -539,7 +656,11 @@ public class StockControllerService extends Service {
 
         OkHttpClient client = new OkHttpClient();
 
-        String url = "https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=" + ALPHA_VANTAGE_KEY;
+        //String url = FINNHUB_LISTING_URL + FINNHUB_API_KEY;
+
+        String url = ALPHA_VANTAGE_LISTING_URL + ALPHA_VANTAGE_KEY;
+
+        url = "https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo";// + ALPHA_VANTAGE_API_KEY;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -554,9 +675,13 @@ public class StockControllerService extends Service {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String csvData = response.body().string();
 
+                    //String jsonResponse = response.body().string();
+                    //BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()));
+
+                    String csvData = response.body().string();
                     BufferedReader reader = new BufferedReader(new StringReader(csvData));
+
                     String line;
                     boolean isFirstLine = true;
 
@@ -575,7 +700,7 @@ public class StockControllerService extends Service {
                             String exchange = tokens[2];
                             String assetType = tokens[3];
 
-                            stocksInMarket.add(new StockInfo(name,symbol,0));
+                            stocksInMarket.add(new StockInfo(name,symbol,0, "0"));
 
                             Log.d("StockSymbol", "Symbol: " + symbol + ", Name: " + name + ", Exchange: " + exchange);
                         }
