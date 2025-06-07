@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class Transaction extends Stock{
 
-    private int mMoneyInvested;
+    private float mNumOfStockInvested;
+
     private Date mTransactionTime;
 
     public Transaction()
@@ -13,17 +14,17 @@ public class Transaction extends Stock{
     }
     Transaction(int moneyInvested, String stockName, float amountOfStock, Date transactionTime)
     {
-        mMoneyInvested = moneyInvested;
+        mNumOfStockInvested = moneyInvested;
         this.setStockName(stockName);
         this.setAmountOfStock(amountOfStock);
         mTransactionTime = transactionTime;
     }
 
-    public int getMoneyInvested() {
-        return mMoneyInvested;
+    public float getMoneyInvested() {
+        return mNumOfStockInvested;
     }
     public void setMoneyInvested(int moneyInvested) {
-        this.mMoneyInvested = moneyInvested;
+        this.mNumOfStockInvested = moneyInvested;
     }
 
     public Date getTransactionTime() {
