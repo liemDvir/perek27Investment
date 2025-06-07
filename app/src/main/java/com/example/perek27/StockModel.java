@@ -328,7 +328,7 @@ public class StockModel extends Application {
                                 lockObject.wait(10000);
                             }
                         } catch (InterruptedException e) {
-                            mModelObserver.OnBuyStockCompleted(false, "Timeout");
+                            mModelObserver.OnSellStockCompleted(false, "Timeout");
                             return;
                         }
                     }
@@ -344,7 +344,7 @@ public class StockModel extends Application {
                         float stockPrice = stockInfFromList.getPrice();
                         float amountOfStock = stockInfFromList.getAmountOfStock();
                         if(amountOfMoneyToSell > (amountOfStock * stockPrice)){
-                            mModelObserver.OnBuyStockCompleted(false, "Not enough stocks to sell");
+                            mModelObserver.OnSellStockCompleted(false, "Not enough stocks to sell");
                             return;
                         }
                     }
@@ -357,14 +357,14 @@ public class StockModel extends Application {
                     try {
                         lockObject.wait(10000);
                     } catch (InterruptedException e) {
-                        mModelObserver.OnBuyStockCompleted(false, "Connection timeout");
+                        mModelObserver.OnSellStockCompleted(false, "Connection timeout");
                         return;
                     }
                 }
 
                 if(!bUpdateCashSuccess){
                     synchronized (lockObject){
-                        mModelObserver.OnBuyStockCompleted(false, "Update failure");
+                        mModelObserver.OnSellStockCompleted(false, "Update failure");
                     }
                     return;
                 }
