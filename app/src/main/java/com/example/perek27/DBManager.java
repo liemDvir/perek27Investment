@@ -1,9 +1,6 @@
 package com.example.perek27;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
@@ -34,6 +31,15 @@ public class DBManager {
 
     public ArrayList<StockInfo> GetStocksByName(String stockName){
         return dbHelper.GetStocksByName(stockName);
+    }
+
+
+    public StockInfo GetStocksBySymbol(String stockSymbol){
+        return dbHelper.GetStocksBySymbol(stockSymbol);
+    }
+
+    public void UpdateStockInfo(StockInfo stock){
+        dbHelper.UpdateStockInfo(stock);
     }
 
     public void InsertAllStockInMarket(ArrayList<StockInfo> stocksInMarket){
