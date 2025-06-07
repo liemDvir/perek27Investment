@@ -76,4 +76,8 @@ public class UserData {
     public float getCash() {
         return cash;
     }
+
+    public void setCash(float newCash){
+        cash = newCash;
+    }
 }
