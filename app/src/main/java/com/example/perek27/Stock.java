@@ -2,7 +2,7 @@ package com.example.perek27;
 
 public class Stock
 {
-
+    private String mStockID;
     private String mStockName;
     private String mStockSymbol;
     private float mAmountOfStock;
@@ -11,14 +11,17 @@ public class Stock
     {
 
     }
-    public Stock(String stockName, String stockSymbol, float amountOfStock)
+    public Stock(String stockName, String stockSymbol, float amountOfStock, String id)
     {
         mStockName = stockName;
         mAmountOfStock = amountOfStock;
         mStockSymbol = stockSymbol;
+        mStockID = id;
     }
 
+    public String getStockID(){ return mStockID; }
 
+    public void setStockID(String id){ mStockID = id;}
     public String getStockName() {
         return mStockName;
     }
