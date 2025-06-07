@@ -588,10 +588,10 @@ public class StockModel extends Application {
         }
 
         @Override
-        public void OnSellStockCompleted(Boolean seccess, String reason) {
+        public void OnSellStockCompleted(Boolean success, String reason) {
             synchronized (lockObject){
                 for (final Observer observer : mObservers) {
-                    observer.OnSellStockCompleted(seccess,reason);
+                    observer.OnSellStockCompleted(success,reason);
                 }
             }
         }
