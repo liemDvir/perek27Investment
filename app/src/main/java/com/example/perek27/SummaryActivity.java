@@ -26,12 +26,14 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     StockModel mStockModel;
 
     RecyclerView recyclerView;
-    Button logout, historyBtn, discoverBtn, settingBtn;
+    Button  historyBtn, discoverBtn, settingBtn;
 
     TextView cashAmountOfMoney, sumAllMoney,sumAllMoneyInvested;
     private StockInfo currentStock;
 
     private Observer mSummayActivityObserver = new MainActivityObserver();
+
+    float sumOfStockValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +68,14 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         sumAllMoney.setOnClickListener(this);
 
         cashAmountOfMoney = (TextView)findViewById(R.id.cashAmountOfMoney);
+        cashAmountOfMoney.setOnClickListener(this);
 
-        sumAllMoneyInvested.setText(String.valueOf(mStockModel.GetSumStocksInvested()));
-        sumAllMoney.setText(String.valueOf(mStockModel.GetSumOfAllMoney()));
 
         recyclerView = (RecyclerView)findViewById(R.id.recycleSummary);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        mStockModel.GetAllCash();
         mStockModel.GetSummaryOfUser();
     }
 
@@ -90,7 +92,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
             this.startActivity(intent);
         } else if (view == settingBtn)
         {
-            Intent intent = new Intent(SummaryActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(SummaryActivity.this, ProfileActivity.class);
             this.startActivity(intent);
         }
 
@@ -115,19 +117,31 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void GetAllCash(float cash) {
-            cashAmountOfMoney.setText((String.valueOf(cash)));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    cashAmountOfMoney.setText((String.valueOf(cash)));
+                }
+            });
         }
 
         @Override
         public void GetAllStocksInvested(List<StockInfo> stockInvested) {
-            SummaryAdapter summaryAdapter = new SummaryAdapter(SummaryActivity.this, new ArrayList<>(stockInvested),item -> {
-                currentStock = (StockInfo) item;
-                Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
-                tmpIntent.putExtra("StockName", currentStock.getStockName());
-                tmpIntent.putExtra("StockSymbol", currentStock.getStockSymbol());
-                startActivity(tmpIntent);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // ✅ UI operations here (e.g., update TextView, Toast)
+                    SummaryAdapter summaryAdapter = new SummaryAdapter(SummaryActivity.this, new ArrayList<>(stockInvested),item -> {
+                        currentStock = (StockInfo) item;
+                        Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
+                        tmpIntent.putExtra("StockName", currentStock.getStockName());
+                        tmpIntent.putExtra("StockSymbol", currentStock.getStockSymbol());
+                        startActivity(tmpIntent);
+                    });
+                    recyclerView.setAdapter(summaryAdapter);
+                }
             });
-            recyclerView.setAdapter(summaryAdapter);
         }
 
         @Override
@@ -137,7 +151,50 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void OnStockInfoUpdate(StockInfo stockInf) {
-            //TODO - update stock
+
+
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    // ✅ UI operations here (e.g., update TextView, Toast)
+
+                    SummaryAdapter summaryAdapter = (SummaryAdapter) recyclerView.getAdapter();
+
+                    for(StockInfo stock : summaryAdapter.arrayList){
+
+                        int position = summaryAdapter.arrayList.indexOf(stock);
+
+                        if(stock.getStockSymbol().equals(stockInf.getStockSymbol())){
+
+                            stock.setPrice(stockInf.getPrice());
+                            stock.setChange_percent(stockInf.getChange_percent());
+
+                            if (stock.getAmountOfStock() != 0)
+                            {
+                                sumOfStockValue = sumOfStockValue + stock.getAmountOfStock()*stock.getPrice();
+                            }
+
+                            summaryAdapter.notifyItemChanged(position);
+                            break; // אם אין מניות עם אותו סמל פעמיים, כדאי לצאת מהלולאה
+                        }
+                    }
+                    sumAllMoneyInvested.setText(String.valueOf(sumOfStockValue));
+                    sumAllMoney.setText(String.valueOf((sumOfStockValue + Float.parseFloat(cashAmountOfMoney.getText().toString()))));
+
+
+
+                }
+            });
+        }
+
+        @Override
+        public void OnBuyStockCompleted(Boolean success, String reason) {
+
+        }
+
+        @Override
+        public void OnUpdateCashCompleted(Boolean success) {
+
         }
     }
 }

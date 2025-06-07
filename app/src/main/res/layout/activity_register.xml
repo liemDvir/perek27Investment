@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,101 +6,134 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Register"
+    tools:context=".RegisterActivity"
     android:background="@color/black"
     >
 
+    <Button
+        android:id="@+id/goBackXml"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:textColor="#4CAF50"
+        android:textSize="40sp"
+        android:text="←"
+        android:textStyle="bold"
+        android:backgroundTint="@color/black"
+        />
+
+
     <TextView
-        android:layout_width = "match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="investment"
-        android:textSize="30dp"
-        android:textAlignment="center"
-        android:textColor= "#4CAF50"
-
-
-        />
-
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:hint="please enter your email"
-        android:textColorHint="@color/white"
-        android:gravity="center"
-        android:layout_marginTop="150dp"
-        android:textSize="25dp"
-        android:layout_margin="50dp"
-        android:id="@+id/emailRegister"
+        android:text="Register"
+        android:textSize="32sp"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        />
+        android:layout_marginTop="20dp" />
 
-
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:hint="password"
-        android:textColorHint="@color/white"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:layout_marginLeft="50dp"
-        android:id="@+id/passwordRegister"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create your account"
+        android:textSize="16sp"
         android:textColor="@color/white"
-        />
+        android:layout_marginBottom="24dp" />
+
     <EditText
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:hint="first name"
-        android:textColorHint="@color/white"
-        android:gravity="center"
-        android:layout_marginTop="150dp"
-        android:textSize="25dp"
-        android:layout_margin="50dp"
         android:id="@+id/firstname"
-        android:textColor="@color/white"
-        />
-    <EditText
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="last name"
+        android:hint="First Name"
         android:textColorHint="@color/white"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:layout_marginLeft="50dp"
-        android:id="@+id/lastName"
         android:textColor="@color/white"
-        />
-    <Button
+
+        android:padding="12dp"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/lastName"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="date of birth"
+        android:layout_height="50dp"
+        android:hint="Last Name"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:padding="12dp"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/emailRegister"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Email"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:padding="12dp"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/passwordRegister"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Password"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:padding="12dp"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+    <Button
         android:id="@+id/dateOfBirth"
-        android:textSize="30dp"
-        android:layout_margin="10dp"
-        android:backgroundTint="#4CAF50"
-        />
-    <Button
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="please take a picture"
-        android:id="@+id/takePicture"
-        android:textSize="30dp"
-        android:layout_margin="10dp"
+        android:layout_height="50dp"
+        android:text="Date of Birth"
+        android:textSize="18sp"
         android:backgroundTint="#4CAF50"
-        />
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:id="@+id/imageRegister"
-        />
-    <Button
+        android:textColor="@color/black"
+        android:layout_marginBottom="12dp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="register"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        >
+
+        <Button
+            android:id="@+id/takePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#4CAF50"
+            android:text="Take a Picture"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+
+            />
+
+        <ImageView
+            android:id="@+id/imageRegister"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:scaleType="centerCrop"
+            android:layout_marginLeft="60dp"
+             />
+    </LinearLayout>
+
+    <Button
         android:id="@+id/registerBtn"
-        android:textSize="30dp"
-        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Register"
+        android:textSize="20sp"
         android:backgroundTint="#4CAF50"
-        />
+        android:textColor="@color/black" />
 
 </LinearLayout>
+
+

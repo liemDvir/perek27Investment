@@ -20,8 +20,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="welcome to (application name)"
+        android:text="welcome to learn2earn!"
         android:textSize="20sp"
+        android:textColor="#858484"
         />
     <TextView
         android:layout_width="match_parent"
@@ -90,17 +91,17 @@
             android:textColor="@color/white"
             android:id="@+id/sumMoneyInvestedXml"
             />
+
     </TableRow>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="20dp"
         android:text="stocks you are invested in:"
         android:textColor="@color/white"
         android:textSize="23dp"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleSummary"

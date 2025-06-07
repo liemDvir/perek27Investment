@@ -29,8 +29,7 @@
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:id="@+id/searchEditText"
-        android:textStyle="bold"
-            />
+        android:textStyle="bold"/>
 
         <ImageView
             android:layout_width="70dp"
@@ -44,7 +43,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="560dp"
+        android:layout_height="550dp"
         android:id="@+id/recycleDiscover"
     />
     <View

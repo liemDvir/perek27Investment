@@ -9,10 +9,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="investment"
+        android:text="learn2earn"
         android:textSize="30dp"
         android:textAlignment="center"
         android:textColor="#4CAF50"
+        android:textStyle="bold"
 
         />
 
@@ -49,6 +50,7 @@
         android:backgroundTint="#4CAF50"
         android:layout_margin="10dp"
         android:enabled="true"
+        android:textColor="@color/black"
 
         />
     <Button
@@ -56,9 +58,10 @@
         android:layout_height="60dp"
         android:text="register"
         android:textSize="30dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:backgroundTint="#4CAF50"
         android:id="@+id/goToRegister"
+
         />
 
 
