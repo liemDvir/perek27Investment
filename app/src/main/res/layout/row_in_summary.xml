@@ -1,30 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:padding="16dp">
+
+    <!-- שם מניה -->
     <TextView
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:textColor="@color/white"
-        android:id="@+id/nameOfStockXml"
-        android:textSize="30sp"
-        android:gravity="center"
-        />
-    <TextView
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:id="@+id/amountOfMoneyXml"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:gravity="center"
-        />
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:id="@+id/numOfSharesXml"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:textColor="@color/white"
+        android:id="@+id/stockNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apple Inc."
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+
         />
 
-</LinearLayout>
+    <!-- כמות מניות + סימול -->
+    <TextView
+        android:id="@+id/stockAmountSymbolTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="6.0000 AAPL"
+        android:textColor="#B0B0B0"
+        android:textSize="14sp"
+        android:layout_below="@id/stockNameTV"
+        android:layout_marginTop="4dp" />
+
+    <!-- ערך כולל -->
+    <TextView
+        android:id="@+id/totalValueTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$1,224.01"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
+
+    <!-- שינוי ערך ואחוזים -->
+    <TextView
+        android:id="@+id/changePercentTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-134.87 (9.9%)"
+        android:textColor="#FF5252"
+        android:textSize="14sp"
+        android:layout_below="@id/totalValueTV"
+        android:layout_alignEnd="@id/totalValueTV"
+        android:layout_marginTop="4dp" />
+
+</RelativeLayout>

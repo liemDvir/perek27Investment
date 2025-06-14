@@ -140,8 +140,6 @@ public class StockDatabaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { stock.getStockSymbol() };
 
         ContentValues values = new ContentValues();
-        //values.put(StockDatabaseHelper.COLUMN_NAME, stock.getStockName());
-        //values.put(StockDatabaseHelper.COLUMN_SYMBOL, stock.getStockSymbol());
         values.put(StockDatabaseHelper.COLUMN_PRICE, stock.getPrice());
         values.put(StockDatabaseHelper.COLUMN_PERCENT, stock.getChange_percent());
         int count = stockDB.update(StockDatabaseHelper.TABLE_NAME,values,selection, selectionArgs);

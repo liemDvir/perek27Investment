@@ -85,4 +85,6 @@ public class StockInfo extends Stock{
     public void setChange_percent(String change_percent) {
         this.change_percent = change_percent;
     }
+
+
 }

@@ -18,6 +18,8 @@ public interface Observer {
 
     public void GetAllStocksInMarket(List<StockInfo> stocksList);
 
+    public void GetDailyReportOfSymbolResults(List<StockInfo> stocksList);
+
     public void GetAllCash(float cash);
 
     public void GetAllUserData(UserData userData);

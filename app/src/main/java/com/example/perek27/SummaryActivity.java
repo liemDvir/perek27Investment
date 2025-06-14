@@ -137,11 +137,17 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                         Intent tmpIntent = new Intent(SummaryActivity.this,StockActionActivity.class);
                         tmpIntent.putExtra("StockName", currentStock.getStockName());
                         tmpIntent.putExtra("StockSymbol", currentStock.getStockSymbol());
+                        tmpIntent.putExtra("amountOfShares",currentStock.getAmountOfStock()+"");
                         startActivity(tmpIntent);
                     });
                     recyclerView.setAdapter(summaryAdapter);
                 }
             });
+        }
+
+        @Override
+        public void GetDailyReportOfSymbolResults(List<StockInfo> stocksList) {
+
         }
 
         @Override
@@ -156,7 +162,6 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
             runOnUiThread(new Runnable() {
                 public void run() {
-                    // ✅ UI operations here (e.g., update TextView, Toast)
 
                     SummaryAdapter summaryAdapter = (SummaryAdapter) recyclerView.getAdapter();
 

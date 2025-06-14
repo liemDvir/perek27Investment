@@ -1,6 +1,8 @@
 package com.example.perek27;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,18 @@ import java.util.ArrayList;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.postViewHolder> {
     private Context context;
+    private OnItemClickListener listener;
     private ArrayList<Transaction> arrayList;
 
-    public TransactionHistoryAdapter(Context newContext, ArrayList<Transaction> newArrayList)
-    {
-        this.context = newContext;
-        this.arrayList = newArrayList;
+    public TransactionHistoryAdapter(Context context, ArrayList<Transaction> arrayList, OnItemClickListener listener) {
+        this.context = context;
+        this.arrayList = arrayList;
+        this.listener = listener;
+    }
+
+    // קונסטרקטור בלי Listener
+    public TransactionHistoryAdapter(Context context, ArrayList<Transaction> arrayList) {
+        this(context, arrayList, null);
     }
     @NonNull
     @Override
@@ -29,24 +37,32 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         return new postViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull postViewHolder holder, int position)
     {
         Transaction transaction = arrayList.get(position);
-
-        /*if (transactionHistory.getIsBuy()) // if true means he sell the stock, else he bought
+        holder.stockSymbol.setText(transaction.getStockName());
+        if (transaction.getMoneyInvested() < 0)
         {
-            holder.amountOfStock.setText("+" + transactionHistory.getMoneyInvested());
-            holder.amountOfStock.setTextColor(Color.parseColor("#4CAF50"));
-            holder.typeOfStock.setTextColor(Color.parseColor("#4CAF50"));
-        } else if (!transactionHistory.getIsBuy())
-        {
-            holder.amountOfStock.setText("-" + transactionHistory.getMoneyInvested());
-            holder.amountOfStock.setTextColor(Color.parseColor("#871919"));
-            holder.typeOfStock.setTextColor(Color.parseColor("#871919"));
+            holder.amountOfStock.setTextColor(Color.RED);
+            holder.amountOfStock.setText("-" + transaction.getMoneyInvested() );
 
-         }*/
-        holder.typeOfStock.setText(transaction.getStockName());
+        }else if(transaction.getMoneyInvested() > 0)
+        {
+            holder.amountOfStock.setTextColor(Color.GREEN);
+            holder.amountOfStock.setText("+" + transaction.getMoneyInvested());
+        }else {
+
+            holder.amountOfStock.setTextColor(Color.WHITE);
+            holder.amountOfStock.setText("" +transaction.getMoneyInvested());
+        }
+
+        holder.dateOfTransaction.setText(transaction.getTransactionTime()+"");
+
+
+        holder.itemView.setOnClickListener(null);
+
 
 
     }
@@ -58,11 +74,12 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 
     public static class postViewHolder extends RecyclerView.ViewHolder
     {
-        TextView typeOfStock, amountOfStock;
+        TextView stockSymbol, amountOfStock, dateOfTransaction;
         public postViewHolder(@NonNull View itemView) {
             super(itemView);
-            typeOfStock = itemView.findViewById(R.id.stockxml);
+            stockSymbol = itemView.findViewById(R.id.stockxml);
             amountOfStock = itemView.findViewById(R.id.pricexml);
+            dateOfTransaction = itemView.findViewById(R.id.datexml);
 
         }
 

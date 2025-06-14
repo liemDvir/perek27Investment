@@ -90,6 +90,7 @@
             android:text="1D"
             android:backgroundTint="@color/black"
             android:id="@+id/oneDayButton"
+            android:textColor="@color/black"
             />
         <Button
             android:layout_width="wrap_content"
@@ -97,6 +98,7 @@
             android:text="1W"
             android:backgroundTint="@color/black"
             android:id="@+id/oneWeekButton"
+            android:textColor="@color/black"
             />
         <Button
             android:layout_width="wrap_content"
@@ -104,6 +106,7 @@
             android:text="3M"
             android:backgroundTint="@color/black"
             android:id="@+id/threeMonthsButton"
+            android:textColor="@color/black"
         />
         <Button
             android:layout_width="wrap_content"
@@ -111,6 +114,7 @@
             android:text="6M"
             android:backgroundTint="@color/black"
             android:id="@+id/sixMonthButton"
+            android:textColor="@color/black"
             />
         <Button
             android:layout_width="wrap_content"
@@ -118,6 +122,7 @@
             android:text="1Y"
             android:backgroundTint="@color/black"
             android:id="@+id/oneYearButton"
+            android:textColor="@color/black"
             />
     </LinearLayout>
 

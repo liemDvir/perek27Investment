@@ -41,8 +41,15 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.SummaryV
     @Override
     public void onBindViewHolder(@NonNull SummaryAdapter.SummaryViewHolder holder, int position) {
         StockInfo stock = arrayList.get(position);
-        holder.nameOfStock.setText(stock.getStockName());
         holder.AmountOfSHaresAndSymbol.setText(stock.getAmountOfStock()+ " " + stock.getStockSymbol());
+
+        if (stock.getStockName().length() > 27)
+        {
+            String newName = stock.getStockName().substring(0,27);
+            holder.nameOfStock.setText(newName + "...");
+        }else {
+            holder.nameOfStock.setText(stock.getStockName());
+        }
 
         if (stock.getChange_percent() != null)
         {
@@ -51,16 +58,16 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.SummaryV
             if (currentChangePrec < 0)
             {
                 holder.changePrec.setTextColor(Color.RED);
-                holder.changePrec.setText("-" + stock.getChange());
+                holder.changePrec.setText("-" + stock.getChange_percent());
 
             }else if(currentChangePrec > 0)
             {
                 holder.changePrec.setTextColor(Color.GREEN);
-                holder.changePrec.setText("+" + stock.getChange());
+                holder.changePrec.setText("+" + stock.getChange_percent());
             }else {
 
                 holder.changePrec.setTextColor(Color.WHITE);
-                holder.changePrec.setText("" +stock.getChange());
+                holder.changePrec.setText("" +stock.getChange_percent());
             }
 
         } else  {

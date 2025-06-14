@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -29,6 +31,7 @@ import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,9 +71,12 @@ public class StockControllerService extends Service {
 
     private DBManager stockDBManager = null;
     
-    private static final String ALPHA_VANTAGE_API_KEY = "2PJN7DA1JVZIZ7G9";
+    //private static final String ALPHA_VANTAGE_API_KEY = "2PJN7DA1JVZIZ7G9";
+    private static final String ALPHA_VANTAGE_API_KEY = "C586BF1V4NQQVKXZ";
 
-    //private static final String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
+    private static final String POLYGON_API_KEY = "Bua0oFKeuCcXJhof3aQwAaB6kAtzANFc";
+
+    private static final String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
     private static final String ALPHA_VANTAGE_KEY = "202VJPX1LEX8M4MA";//"QVKNZ7YQGN1U0PTZ";
     private static final String ALPHA_VANTAGE_BASE_URL = "https://www.alphavantage.co/";
 
@@ -78,7 +84,7 @@ public class StockControllerService extends Service {
 
     private static String FINNHUB_LISTING_URL = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=";
     private OkHttpClient mOkHttpClient = new OkHttpClient();
-    private static String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
+    //private static String FINNHUB_API_KEY = "cvfj3h9r01qtu9s5564gcvfj3h9r01qtu9s55650";
     private static final String IEX_API_URL = "https://cloud.iexapis.com/stable/";
 
     private static final String IEX_API_KEY = "https://sandbox.iexapis.com/";
@@ -542,6 +548,71 @@ public class StockControllerService extends Service {
         });
     }
 
+    public void GetDailyReportOfSymbol(String stockSymbol){
+        /*long currentUnixTime = System.currentTimeMillis() / 1000L;
+        // 10 days = 10 * 24 * 60 * 60 seconds
+        long tenDaysInSeconds = 10 * 24 * 60 * 60;
+        long tenDaysAgoUnixTime = currentUnixTime - tenDaysInSeconds;*/
+
+        Calendar calendar = Calendar.getInstance();
+        long currentUnixTime = calendar.getTimeInMillis() / 1000L;
+        calendar.add(Calendar.DAY_OF_YEAR, -10); // move 10 days back
+        long tenDaysAgoUnixTime = calendar.getTimeInMillis() / 1000L;
+
+        /*String url = "https://finnhub.io/api/v1/stock/candle?symbol=" + stockSymbol +
+                "&resolution=D&from=" + tenDaysAgoUnixTime + "&to=" + currentUnixTime + "&token=" + FINNHUB_API_KEY;
+        */
+        //String url = "https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey=demo";
+
+        String url = "https://api.twelvedata.com/time_series?symbol=" + stockSymbol + "&interval=1week&apikey=" + POLYGON_API_KEY;
+        url = "https://api.polygon.io/v2/aggs/ticker/"+ stockSymbol +"/range/1/week/2024-05-01/2024-06-07?apiKey=" + POLYGON_API_KEY;
+
+
+        /*String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="
+                + stockSymbol + "&apikey=" + ALPHA_VANTAGE_API_KEY;*/
+
+        Request request = new Request.Builder().url(url).build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d(STOCK_CONTROLLER_SERVICE_NAME,"GetDailyReportOfSymbol");
+                if (response.isSuccessful() && response.body() != null) {
+
+                    ArrayList<StockInfo> stocksList =  new ArrayList<>();
+                    String json = response.body().string();
+
+                    //JSONObject obj = new JSONObject(json).getJSONObject("Global Quote");
+                    try {
+                        JSONObject obj = new JSONObject(json);
+                        String stockSymbol = obj.getString("ticker");
+                        JSONArray dataArray = obj.getJSONArray("results");
+                        for (int i = 0; i < dataArray.length(); i++) {
+                            JSONObject stockObj = dataArray.getJSONObject(i);
+                            double price = stockObj.getDouble("vw");
+                            StockInfo stock = new StockInfo("", stockSymbol,0,String.valueOf(i));
+                            stock.setPrice((float) price);
+                            stocksList.add(stock);
+                        }
+
+                        synchronized (mObservers){
+                            for (final Observer observer : mObservers) {
+                                observer.GetDailyReportOfSymbolResults(stocksList);
+                            }
+                        }
+                    } catch (JSONException e) {
+
+                    }
+                }
+            }
+        });
+    }
+
     public void GetStockInfo(String stockSymbol){
 
         /*"01. symbol": "AAPL",
@@ -599,10 +670,21 @@ public class StockControllerService extends Service {
                         /*String symbol = obj.getString("01. symbol");
                         String price = obj.getString("05. price");
                         String changePercent = obj.getString("10. change percent");
-*/
+                        */
                         String symbol = stockSymbol;
                         double price = obj.getDouble("c");
                         String changePercent = obj.getString("dp");
+                        if(changePercent.equals("null")){
+                            Log.e(STOCK_CONTROLLER_SERVICE_NAME, "changePercent == null");
+                            synchronized (mObservers){
+                                for (final Observer observer : mObservers) {
+                                    observer.OnStockInfoUpdate(null);
+                                }
+                            }
+                            return;
+                        }
+
+                        changePercent += "%";
 
                         /*String symbol = stockSymbol;
                         String price = "198.1500";

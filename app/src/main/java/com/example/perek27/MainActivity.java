@@ -20,7 +20,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (view == goRegister)
         {
-            Intent intent = new Intent(MainActivity.this, Register.class);
+            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
         }
     }
@@ -109,22 +108,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
+        public void GetDailyReportOfSymbolResults(List<StockInfo> stocksList) {
+
+        }
+
+        @Override
         public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
 
         }
 
         @Override
-        public void GetAllStocksInMarket(List<Stock> stocksList) {
+        public void GetAllStocksInMarket(List<StockInfo> stocksList) {
 
         }
 
         @Override
-        public void GetAllStocksInvested(List<Stock> stockInvested) {
+        public void GetAllCash(float cash) {
 
         }
 
         @Override
-        public void getALLCash(float cash) {
+        public void GetAllStocksInvested(List<StockInfo> stockInvested) {
 
         }
 
@@ -135,6 +139,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void OnStockInfoUpdate(StockInfo stockInf) {
+
+        }
+
+        @Override
+        public void OnBuyStockCompleted(Boolean success, String reason) {
+
+        }
+
+        @Override
+        public void OnSellStockCompleted(Boolean seccess, String reason) {
+
+        }
+
+        @Override
+        public void OnUpdateCashCompleted(Boolean success) {
 
         }
     }

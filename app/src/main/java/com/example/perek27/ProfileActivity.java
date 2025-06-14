@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
@@ -88,15 +88,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if (view == summaryBtn)
         {
-            Intent intent = new Intent(SettingsActivity.this, SummaryActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, SummaryActivity.class);
             startActivity(intent);
         } else if (view == discoverBtn)
         {
-            Intent intent = new Intent(SettingsActivity.this, DiscoverActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, DiscoverActivity.class);
             startActivity(intent);
         } else if (view == historyBtn)
         {
-            Intent intent = new Intent(SettingsActivity.this, TransactionHistoryActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, TransactionHistoryActivity.class);
             startActivity(intent);
         } else if (view == logoutBtn)
         {
@@ -114,22 +114,22 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
 
         @Override
-        public void GetAllStocksInvested(List<Stock> stockInvested) {
+        public void GetAllStocksInvested(List<StockInfo> stockInvested) {
 
         }
 
         @Override
-        public void GetAllStocksInMarket(List<Stock> stocksList) {
+        public void GetAllStocksInMarket(List<StockInfo> stocksList) {
+
+        }
+
+        @Override
+        public void GetAllCash(float cash) {
 
         }
 
         @Override
         public void GetTransactionHistory(ArrayList<Transaction> transactionsList) {
-
-        }
-
-        @Override
-        public void getALLCash(float cash) {
 
         }
 
@@ -149,7 +149,27 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
 
         @Override
+        public void GetDailyReportOfSymbolResults(List<StockInfo> stocksList) {
+
+        }
+
+        @Override
         public void OnStockInfoUpdate(StockInfo stockInf) {
+
+        }
+
+        @Override
+        public void OnBuyStockCompleted(Boolean success, String reason) {
+
+        }
+
+        @Override
+        public void OnSellStockCompleted(Boolean seccess, String reason) {
+
+        }
+
+        @Override
+        public void OnUpdateCashCompleted(Boolean success) {
 
         }
     }

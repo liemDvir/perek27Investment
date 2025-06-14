@@ -124,29 +124,13 @@ public class StockModel extends Application {
     }
 
     public void GetAllStocksInMarket(){
-        //TODO - need to implement it
-        //ArrayList<Stock> stocksStack =  new ArrayList<>();
-        //Date currentDay = new Date(System.currentTimeMillis());
-        /*Stock s1 = new Stock("AAPL",1);
-        Stock s2 = new Stock("NETFLIX",3);
-        Stock s3 = new Stock("META",2);
-        Stock s4 = new Stock("GME",4);
-
-        stocksStack.add(s1);
-        stocksStack.add(s2);
-        stocksStack.add(s3);
-        stocksStack.add(s4);
-        return stocksStack;*/
 
         if(mStockControllerService == null)
             return;
 
         mStockControllerService.GetAllStocksInMarket();
     }
-    public float GetSumStocksInvested(){
-        ///TODO - need to implement it
-        return 1200;
-    }
+
     public void GetAllUserData()
     {
         if(mStockControllerService == null)
@@ -159,12 +143,6 @@ public class StockModel extends Application {
 
         //SetTransaction(new Transaction(120,"NETFLIX",2, Calendar.getInstance().getTime()));
         mStockControllerService.GetAllUserData();
-    }
-    public float GetSumOfAllMoney()
-    {
-       /* float sum = GetSumStocksInvested() + GetAllCash();
-        return sum;*/
-        return 0;
     }
 
     public void GetAllCash()
@@ -439,6 +417,15 @@ public class StockModel extends Application {
         return stockList;
     }
 
+    public void GetDailyReportOfSymbol(String stockSymbol){
+        if(mStockControllerService == null)
+            return;
+
+        Log.d("StockModel", "GetDailyReportOfSymbol: " + stockSymbol);
+
+        mStockControllerService.GetDailyReportOfSymbol(stockSymbol);
+    }
+
     public void GetStockInfo(String stockSymbol){
         if(mStockControllerService == null)
             return;
@@ -484,6 +471,15 @@ public class StockModel extends Application {
             synchronized (lockObject){
                 for (final Observer observer : mObservers) {
                     observer.SignInWithEmailAndPasswordCompleate(task);
+                }
+            }
+        }
+
+        @Override
+        public void GetDailyReportOfSymbolResults(List<StockInfo> stocksList) {
+            synchronized (lockObject){
+                for (final Observer observer : mObservers) {
+                    observer.GetDailyReportOfSymbolResults(stocksList);
                 }
             }
         }
